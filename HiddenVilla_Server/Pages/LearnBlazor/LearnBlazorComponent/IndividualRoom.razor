@@ -1,0 +1,30 @@
+﻿@using HiddenVilla_Server.Model 
+
+<div class="bg-light border p-2 col-5 offset-1">
+    <h4 class="text-secondary">Room - @Room.ID</h4>
+
+    @Room.RoomName
+    <br />
+    @Room.price.ToString("c")
+    <br />
+    <input type="checkbox" name="name" @bind="Room.IsActive" @bind:event="oninput" />
+    @if (Room.IsActive)
+    {
+        <span> The room is: Active </span>
+        @foreach (var props in Room.RoomProps)
+        {
+            <h5>@props.Name - @props.Value</h5>
+        }
+    }
+    else
+    {
+        <span> The room is: Inactive </span>
+    }
+    <br />
+    <EditDeleteButton IsAdmin="true"></EditDeleteButton>
+</div>
+
+@code {
+    [Parameter]
+    public BlazorRoom Room { get; set; }
+}
