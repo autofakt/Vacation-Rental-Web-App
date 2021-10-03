@@ -2,7 +2,7 @@
 <h3>Lifecycle</h3>
 
 <div class="border">
-    <LifecycleComponent></LifecycleComponent>
+    <LifecycleComponent CountValue="@currentCount"></LifecycleComponent>
 </div>
 
 <p>Current count: @currentCount</p>
@@ -34,4 +34,14 @@
         await Task.Delay(1000);
     }
 
+    protected override void OnParametersSet()
+    {
+        EventType.Add("OnParameter is called");
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        EventType.Add("OnParamtere Async is called");
+        await Task.Delay(1000);
+    }
 }

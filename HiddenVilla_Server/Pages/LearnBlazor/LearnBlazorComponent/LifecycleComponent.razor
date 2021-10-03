@@ -8,7 +8,8 @@
 }
 
 @code {
-    private int currentCount = 0;
+    [Parameter]
+    public int CountValue { get; set; }
     List<string> EventType = new List<string>();
 
     protected override void OnInitialized()
@@ -16,4 +17,8 @@
         EventType.Add("Child - nInitialized is called");
     }
 
+    protected override void OnParametersSet()
+    {
+        EventType.Add("Child - Parameter is called");
+    }
 }
