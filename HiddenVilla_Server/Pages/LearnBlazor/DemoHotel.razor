@@ -1,14 +1,15 @@
 ﻿@page "/demohotel"
 @using Model
 
-
 <h3>We will display hotel rooms and amenitites here!</h3>
 <div class="border p-2 mt-2" style="background-color:azure">
     <h2 class="text-info">Room List [USING COMPONENT]</h2>
+    <h3 class="text-info">Hotel Room's:'</h3>
+    <span>Rooms Selected - @SelectedRooms</span>
     <div class="row container">
         @foreach (var room in RoomsList)
         {
-            <IndividualRoom Room="@room"></IndividualRoom>
+            <IndividualRoom Room="@room" OnRoomCheckBoxSelection="RoomSelectionCounterChanged"></IndividualRoom>
         }
     </div>
 
@@ -16,16 +17,20 @@
     <div class="row container">
         @foreach (var amenitie in HotelAmenitiesList)
         {
-            <IndividualAmenitie Amenitie="amenitie"></IndividualAmenitie>
+            <IndividualAmenitie onAmenityClickSelection="AmenitySelectionChanged" Amenitie="amenitie"></IndividualAmenitie>
         }
     </div>
+    <span>Selected Amenity: @SelectedAmenity</span>
 </div>
+
 
 
 
 @code{
     List<BlazorRoom> RoomsList = new List<BlazorRoom>();
     List<BlazorAmenities> HotelAmenitiesList = new List<BlazorAmenities>();
+    public int SelectedRooms { get; set; } = 0;
+    public string SelectedAmenity { get; set; } = "";
 
     protected override void OnInitialized()
     {
@@ -82,4 +87,24 @@
 
         });
     }
+
+    protected void RoomSelectionCounterChanged(bool isRoomSelected)
+    {
+        if (isRoomSelected)
+        {
+            SelectedRooms++;
+        }
+        else
+        {
+            SelectedRooms--;
+        }
+    }
+
+    protected void AmenitySelectionChanged(string AmenityName)
+    {
+        
+            SelectedAmenity = AmenityName;
+        
+    }
 }
+

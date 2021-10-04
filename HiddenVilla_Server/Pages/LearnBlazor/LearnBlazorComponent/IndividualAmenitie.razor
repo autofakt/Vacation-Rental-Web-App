@@ -1,6 +1,6 @@
 ﻿@using HiddenVilla_Server.Model 
 
-<div class="bg-light border p-2 col-5 offset-1">
+<div class="bg-light border p-2 col-5 offset-1" @onclick="(args)=> AmenityClickSelectionChanged(args,Amenitie.Name)">
     <h4 class="text-secondary">Amenities - @Amenitie.ID</h4>
 
     @Amenitie.Name
@@ -11,4 +11,13 @@
 @code {
     [Parameter]
     public BlazorAmenities Amenitie { get; set; }
+
+    [Parameter]
+    public EventCallback<string> onAmenityClickSelection { get; set; }
+
+    protected async Task AmenityClickSelectionChanged(MouseEventArgs e, string name)
+    {
+        await onAmenityClickSelection.InvokeAsync(name);
+    }
+
 }
