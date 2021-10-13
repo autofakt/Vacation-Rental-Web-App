@@ -2,12 +2,11 @@
 
 <h3 class="text-danger">Parent Child Component</h3>
 <ChildComponent Title="This title is passed from parent component" OnClickBtnMethod="ShowMessage">
-    Render Fragement From Parent! WooHoo!
+    <ChildContent>Render Fragement From Parent! WooHoo!</ChildContent>
+    <DangerChildContent>Content in the danger fragment</DangerChildContent>
 </ChildComponent>
 
-<ChildComponent Title="This second title is passed from parent component" OnClickBtnMethod="ShowMessage2">
 
-</ChildComponent>
 
 <p>@messageText</p>
 @code {
