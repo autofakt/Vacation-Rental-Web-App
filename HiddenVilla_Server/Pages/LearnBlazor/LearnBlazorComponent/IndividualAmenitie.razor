@@ -6,11 +6,19 @@
     @Amenitie.Name
     <br />
     @Amenitie.Description
+    <br />
+    RF from Parent - @FirstFragment @SecondFragment
 </div>
 
 @code {
     [Parameter]
     public BlazorAmenities Amenitie { get; set; }
+
+    [Parameter]
+    public RenderFragment FirstFragment { get; set; }
+
+    [Parameter]
+    public RenderFragment SecondFragment { get; set; }
 
     [Parameter]
     public EventCallback<string> onAmenityClickSelection { get; set; }
