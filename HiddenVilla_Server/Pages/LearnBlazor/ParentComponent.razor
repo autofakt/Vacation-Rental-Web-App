@@ -6,10 +6,21 @@
     <DangerChildContent>Content in the danger fragment</DangerChildContent>
 </ChildComponent>
 
-<AnotherChildComponent Placeholder="Enter the Room Name from Parent" MaxLength="5"></AnotherChildComponent>
+<AnotherChildComponent InputAttributes="InputAttributesFromParent"></AnotherChildComponent>
 
 <p>@messageText</p>
 @code {
+
+    //Placeholder="" MaxLength="5"
+    [Parameter]
+    public Dictionary<string, object> InputAttributesFromParent { get; set; } = new Dictionary<string, object>()
+    {
+        {"required", "required" },
+        {"placeholder", "Enter the Room Name From Parent" },
+        { "maxlength", 5 }
+    };
+
+
     private string messageText = "";
     private void ShowMessage(MouseEventArgs e)
     {
@@ -17,7 +28,7 @@
 
     }
 
-   
+
 
     private void ShowMessage2(MouseEventArgs e)
     {
