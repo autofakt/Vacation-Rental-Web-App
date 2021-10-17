@@ -1,15 +1,20 @@
 ﻿@page "/ParentComponent"
 
 <h3 class="text-danger">Parent Child Component</h3>
-<ChildComponent Title="This title is passed from parent component" MessageForGrandChild="This is from Parent hahah" OnClickBtnMethod="ShowMessage">
-    <ChildContent>Render Fragement From Parent! WooHoo!</ChildContent>
-    <DangerChildContent>Content in the danger fragment</DangerChildContent>
-</ChildComponent>
+
+<CascadingValue Value="@MessageForGrandChild">
+    <ChildComponent Title="This title is passed from parent component" OnClickBtnMethod="ShowMessage">
+        <ChildContent>Render Fragement From Parent! WooHoo!</ChildContent>
+        <DangerChildContent>Content in the danger fragment</DangerChildContent>
+    </ChildComponent>
+</CascadingValue>
 
 <AnotherChildComponent InputAttributes="InputAttributesFromParent"></AnotherChildComponent>
 
 <p>@messageText</p>
 @code {
+
+    private string MessageForGrandChild = "This is a message from Grand Parent";
 
     //Placeholder="" MaxLength="5"
     [Parameter]
