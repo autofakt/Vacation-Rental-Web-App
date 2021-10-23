@@ -11,9 +11,10 @@ namespace Business.Repository.IRepository
     {
         public Task<HotelRoomDTO> CreateHotelRoom(HotelRoomDTO hotelRoomDTO);
         public Task<HotelRoomDTO> UpdateHotelRoom(int roomID, HotelRoomDTO hotelRoomDTO);
-        public Task<HotelRoomDTO> GetHotelRoom(int roomID, HotelRoomDTO hotelRoomDTO);
-        public Task<IEnumerable<HotelRoomDTO>> GetAllHotelRoom();
-        public Task<HotelRoomDTO> IsSameNameRoomAlreadyPresent(string name);
+        public Task<HotelRoomDTO> GetHotelRoom(int roomID);
+        public Task<int> DeleteHotelRoom(int roomId);
+        public Task<IEnumerable<HotelRoomDTO>> GetAllHotelRooms();
+        public Task<HotelRoomDTO> IsRoomUnique(string name);
 
     }
 }
