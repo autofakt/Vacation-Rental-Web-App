@@ -6,3 +6,24 @@
         toastr.error(message, "Operation Failed");
     }
 }
+
+window.ShowSwal = (type, message) => {
+    if (type === "success") {
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: message,
+            footer: '<a href="">Getting stuff right!/a>'
+        })
+
+    }
+    if (type === "error") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: message,
+            footer: '<a href="">Screwing up too much!/a>'
+        })
+    }
+}

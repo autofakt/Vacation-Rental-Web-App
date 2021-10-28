@@ -11,6 +11,12 @@
     <button class="btn btn-success" @onclick="TestSuccess">Test Toastr Success</button>
     <button class="btn btn-danger" @onclick="TestFailure">Test Toastr Failure</button>
 </div>
+
+<div class="row">
+    <button class="btn btn-success" @onclick="TestSwalSuccess">Test Swal Success</button>
+    <button class="btn btn-danger" @onclick="TestSwalFailure">Test Swal Failure</button>
+</div>
+
 <div class="row">
     @if (ConfirmResult)
             {
@@ -38,5 +44,15 @@
     private async Task TestFailure()
     {
         await JSRuntime.ToastrError("Error Message");
+    }
+
+    private async Task TestSwalSuccess()
+    {
+        await JSRuntime.SwalSuccess("Success Message");
+    }
+
+    private async Task TestSwalFailure()
+    {
+        await JSRuntime.SwalError("Error Message");
     }
 }
