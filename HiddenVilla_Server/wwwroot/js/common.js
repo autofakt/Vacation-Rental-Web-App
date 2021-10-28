@@ -14,7 +14,7 @@ window.ShowSwal = (type, message) => {
             icon: 'success',
             title: 'Success',
             text: message,
-            footer: '<a href="">Getting stuff right!/a>'
+            footer: '<a href="">Getting stuff right!</a>'
         })
 
     }
@@ -23,7 +23,7 @@ window.ShowSwal = (type, message) => {
             icon: 'error',
             title: 'Error',
             text: message,
-            footer: '<a href="">Screwing up too much!/a>'
+            footer: '<a href="">Screwing up too much!</a>'
         })
     }
 }
