@@ -61,14 +61,25 @@ namespace Business.Repository.IRepository
             
         }
 
-        public async Task<HotelRoomDTO> IsRoomUnique(string name)
+        public async Task<HotelRoomDTO> IsRoomUnique(string name, int roomId = 0)
         {
             try
             {
-                HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom, HotelRoomDTO>(
-                    await _db.HotelRooms.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower()));
+                if (roomId == 0) //create
+                {
+                    HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom, HotelRoomDTO>(
+                        await _db.HotelRooms.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower()));
 
-                return hotelRoom;
+                    return hotelRoom;
+                }
+                else 
+                {
+                    HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom, HotelRoomDTO>(
+                        await _db.HotelRooms.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower() && x.Id!=roomId));
+                    //checks to see that: there isnt already a room with that same name but different id = duplicate
+
+                    return hotelRoom;
+                }
             }
             catch (Exception ex)
             {
