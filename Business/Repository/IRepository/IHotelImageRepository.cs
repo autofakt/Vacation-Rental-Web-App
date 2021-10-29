@@ -7,7 +7,7 @@ using Models;
 
 namespace Business.Repository.IRepository
 {
-    interface IHotelImageRepository
+    public interface IHotelImageRepository
     {
         public Task<int> CreateHotelRoomImage(HotelRoomImageDTO image);
         public Task<int> DeleteHotelRoomImageByImageId(int imageId);
