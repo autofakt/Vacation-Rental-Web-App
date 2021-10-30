@@ -21,6 +21,6 @@ namespace Models
 
         public string SqFt { get; set; }
 
-       
+        public virtual ICollection<HotelRoomImageDTO> HotelRoomImages { get; set; } // no migration because its virtual
     }
 }
