@@ -1,6 +1,7 @@
 using Business.Repository.IRepository;
 using DataAccess.Data;
 using HiddenVilla_Server.Data;
+using HiddenVilla_Server.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HiddenVilla_Server.Service;
+using Business.Repository;
 
 namespace HiddenVilla_Server
 {
@@ -30,9 +33,10 @@ namespace HiddenVilla_Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IHotelRoomRepository, HotelRoomRepository>();
+            services.AddScoped<IHotelImageRepository, HotelImagesRepository>();
+            services.AddScoped<IFileUpload, FileUpload>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
