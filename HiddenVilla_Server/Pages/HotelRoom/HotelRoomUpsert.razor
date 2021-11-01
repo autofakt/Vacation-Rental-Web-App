@@ -5,6 +5,7 @@
 @using System.IO
 @using HiddenVilla_Server.Service
 @inject IHotelRoomRepository HotelRoomRepository
+@inject IHotelImageRepository HotelImagesRepository
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
 @inject IFileUpload FileUpload
@@ -16,7 +17,7 @@
         <div class="card">
             <div class="card-body">
                 <EditForm Model="HotelRoomModel" OnValidSubmit="HandleHotelRoomUpsert">
-                    <DataAnnotationsValidator/>
+                    <DataAnnotationsValidator />
                     @*<ValidationSummary/>*@
                     <div class="form-group">
                         <label>Name</label>
@@ -43,6 +44,23 @@
                     </div>
                     <div class="form-group">
                         <InputFile OnChange="HandleImageUpload" multiple></InputFile>
+                        <div class="row">
+                            @if (HotelRoomModel.ImageUrls != null && HotelRoomModel.ImageUrls.Count > 0)
+                            {
+                                int photoCounter = 1;
+                                foreach (var roomImage in HotelRoomModel.ImageUrls)
+                                {
+                                    <div class="col-md-2 mt-3">
+                                        <div class="room-image" style="background: url('@roomImage') 50% 50%; ">
+                                            <span class="room-image-title">@photoCounter</span>
+                                        </div>
+                                        <button type="button" class="btn btn-outline-danger btn-block mt-4">Delete</button>
+                                    </div>
+
+                                    photoCounter++;
+                                }
+                            }
+                        </div>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary">@Title Room </button>
@@ -62,9 +80,10 @@
     private HotelRoomDTO HotelRoomModel { get; set; } = new HotelRoomDTO();
     private string Title { get; set; } = "Create";
 
+    private HotelRoomImageDTO RoomImage { get; set; } = new HotelRoomImageDTO();
     protected override async Task OnInitializedAsync()
     {
-        if(Id != null)
+        if (Id != null)
         {
             //updating
             Title = "Update";
@@ -90,7 +109,7 @@
                 return;
             }
 
-            if (HotelRoomModel.Id!=0 && Title == "Update")
+            if (HotelRoomModel.Id != 0 && Title == "Update")
             {
                 //update
                 var updateRoomResult = await HotelRoomRepository.UpdateHotelRoom(HotelRoomModel.Id, HotelRoomModel);
@@ -100,11 +119,12 @@
             {
                 //create
                 var createdResult = await HotelRoomRepository.CreateHotelRoom(HotelRoomModel);
+                await AddHotelRoomImage(createdResult);
                 await JsRuntime.ToastrSuccess("Hotel room created successfully");
 
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
 
         }
@@ -112,16 +132,17 @@
         NavigationManager.NavigateTo("hotel-room");
     }
 
-    private async Task HandleImageUpload(InputFileChangeEventArgs e) {
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
         try
         {
             var images = new List<string>();
             if (e.GetMultipleFiles().Count > 0)
             {
-                foreach(var file in e.GetMultipleFiles())
+                foreach (var file in e.GetMultipleFiles())
                 {
                     FileInfo fileInfo = new FileInfo(file.Name);
-                    if(fileInfo.Extension.ToLower()==".jpg" || fileInfo.Extension.ToLower() == ".png" || fileInfo.Extension.ToLower() == ".jpeg")
+                    if (fileInfo.Extension.ToLower() == ".jpg" || fileInfo.Extension.ToLower() == ".png" || fileInfo.Extension.ToLower() == ".jpeg")
                     {
                         var uploadedImagePath = await FileUpload.UploadFile(file);
                         images.Add(uploadedImagePath);
@@ -134,7 +155,7 @@
                 }
                 if (images.Any())
                 {
-                    if(HotelRoomModel.ImageUrls!=null && HotelRoomModel.ImageUrls.Any())
+                    if (HotelRoomModel.ImageUrls != null && HotelRoomModel.ImageUrls.Any())
                     {
                         HotelRoomModel.ImageUrls.AddRange(images);
                     }
@@ -151,10 +172,24 @@
                 }
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             await JsRuntime.ToastrError(ex.Message);
         }
     }
+
+
+    private async Task AddHotelRoomImage(HotelRoomDTO roomDetails)
+    {
+        foreach (var imageUrl in HotelRoomModel.ImageUrls)
+        {
+            RoomImage = new HotelRoomImageDTO()
+            {
+                RoomId = roomDetails.Id,
+                RoomImageUrl = imageUrl
+        };
+        await HotelImagesRepository.CreateHotelRoomImage(RoomImage);
+    }
+}
 
 }
