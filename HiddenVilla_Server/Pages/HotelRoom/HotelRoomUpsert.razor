@@ -79,8 +79,8 @@
 
     private HotelRoomDTO HotelRoomModel { get; set; } = new HotelRoomDTO();
     private string Title { get; set; } = "Create";
-
     private HotelRoomImageDTO RoomImage { get; set; } = new HotelRoomImageDTO();
+
     protected override async Task OnInitializedAsync()
     {
         if (Id != null)
@@ -117,7 +117,11 @@
             {
                 //update
                 var updateRoomResult = await HotelRoomRepository.UpdateHotelRoom(HotelRoomModel.Id, HotelRoomModel);
-                var roomImages = await HotelImagesRepository.GetHotelRoomImages(HotelRoomModel.Id);//
+                if(HotelRoomModel.ImageUrls != null && HotelRoomModel.ImageUrls.Any())
+                {
+                    //add images only if new
+                    await AddHotelRoomImage(updateRoomResult);
+                }
                 await JsRuntime.ToastrSuccess("Hotel room updated successfully");
             }
             else
@@ -137,6 +141,8 @@
         NavigationManager.NavigateTo("hotel-room");
     }
 
+    //Checks if files are correct format, makes file path and uploads to server,
+    //then adds list of file paths to DTO imageUrls
     private async Task HandleImageUpload(InputFileChangeEventArgs e)
     {
         try
@@ -149,11 +155,13 @@
                     FileInfo fileInfo = new FileInfo(file.Name);
                     if (fileInfo.Extension.ToLower() == ".jpg" || fileInfo.Extension.ToLower() == ".png" || fileInfo.Extension.ToLower() == ".jpeg")
                     {
+                        //success
                         var uploadedImagePath = await FileUpload.UploadFile(file);
                         images.Add(uploadedImagePath);
                     }
                     else
                     {
+                        //error
                         await JsRuntime.ToastrError("Please select .jpg/.jpeg/.png file only");
                         return;
                     }
