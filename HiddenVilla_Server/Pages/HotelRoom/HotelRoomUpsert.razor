@@ -90,6 +90,7 @@
             HotelRoomModel = await HotelRoomRepository.GetHotelRoom(Id.Value);
             if(HotelRoomModel?.HotelRoomImages != null)
             {
+                //HotelRoomImages gets the data from the database during GetHotelRoom function call
                 HotelRoomModel.ImageUrls = HotelRoomModel.HotelRoomImages.Select(u => u.RoomImageUrl).ToList();
             }
         }
@@ -126,9 +127,12 @@
             }
             else
             {
+
                 //create
                 var createdResult = await HotelRoomRepository.CreateHotelRoom(HotelRoomModel);
+                Console.WriteLine("Got to the after else in create");
                 await AddHotelRoomImage(createdResult);
+
                 await JsRuntime.ToastrSuccess("Hotel room created successfully");
 
             }
@@ -170,10 +174,12 @@
                 {
                     if (HotelRoomModel.ImageUrls != null && HotelRoomModel.ImageUrls.Any())
                     {
+                        //if already has image urls
                         HotelRoomModel.ImageUrls.AddRange(images);
                     }
                     else
                     {
+                        //if creating or empty edit (no image urls)
                         HotelRoomModel.ImageUrls = new List<string>();
                         HotelRoomModel.ImageUrls.AddRange(images);
                     }
@@ -194,14 +200,20 @@
 
     private async Task AddHotelRoomImage(HotelRoomDTO roomDetails)
     {
+        
         foreach (var imageUrl in HotelRoomModel.ImageUrls)
         {
-            RoomImage = new HotelRoomImageDTO()
+            
+            if (HotelRoomModel.HotelRoomImages == null||HotelRoomModel.HotelRoomImages.Where(x => x.RoomImageUrl == imageUrl).Count() == 0)
             {
-                RoomId = roomDetails.Id,
-                RoomImageUrl = imageUrl
-            };
-            await HotelImagesRepository.CreateHotelRoomImage(RoomImage);
+
+                RoomImage = new HotelRoomImageDTO()
+                {
+                    RoomId = roomDetails.Id,
+                    RoomImageUrl = imageUrl
+                };
+                await HotelImagesRepository.CreateHotelRoomImage(RoomImage);
+            }
         }
     }
 
