@@ -88,6 +88,10 @@
             //updating
             Title = "Update";
             HotelRoomModel = await HotelRoomRepository.GetHotelRoom(Id.Value);
+            if(HotelRoomModel?.HotelRoomImages != null)
+            {
+                HotelRoomModel.ImageUrls = HotelRoomModel.HotelRoomImages.Select(u => u.RoomImageUrl).ToList();
+            }
         }
         else
         {
@@ -113,6 +117,7 @@
             {
                 //update
                 var updateRoomResult = await HotelRoomRepository.UpdateHotelRoom(HotelRoomModel.Id, HotelRoomModel);
+                var roomImages = await HotelImagesRepository.GetHotelRoomImages(HotelRoomModel.Id);//
                 await JsRuntime.ToastrSuccess("Hotel room updated successfully");
             }
             else
@@ -187,9 +192,9 @@
             {
                 RoomId = roomDetails.Id,
                 RoomImageUrl = imageUrl
-        };
-        await HotelImagesRepository.CreateHotelRoomImage(RoomImage);
+            };
+            await HotelImagesRepository.CreateHotelRoomImage(RoomImage);
+        }
     }
-}
 
 }

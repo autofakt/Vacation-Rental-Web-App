@@ -50,7 +50,13 @@ namespace Business.Repository.IRepository
         {
             try
             {
-                HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom,HotelRoomDTO>( await _db.HotelRooms.FirstOrDefaultAsync(x => x.Id == roomID));
+                HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom,HotelRoomDTO>( await _db.HotelRooms.Include(x=> x.HotelRoomImages).FirstOrDefaultAsync(x => x.Id == roomID));
+                
+                //Another version of code that works without using Eager Loading in EF.
+                //HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom, HotelRoomDTO>(await _db.HotelRooms.FirstOrDefaultAsync(x => x.Id == roomID));
+                //var hotelImages = _mapper.Map<IEnumerable<HotelRoomImage>, IEnumerable<HotelRoomImageDTO>>(await _db.HotelRoomImages.Where(x => x.RoomId == roomID).ToListAsync());
+                //ICollection<HotelRoomImageDTO> imagesCollection = hotelImages.ToList();
+                //hotelRoom.HotelRoomImages = imagesCollection;
 
                 return hotelRoom;
             }
