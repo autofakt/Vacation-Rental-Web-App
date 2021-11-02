@@ -45,6 +45,12 @@
                     <div class="form-group">
                         <InputFile OnChange="HandleImageUpload" multiple></InputFile>
                         <div class="row">
+                            @if (HasImageUploadProcessStarted)
+                            {
+                                <div class="col-md-12">
+                                    <span><i class="fa fa-spin fa-spinner"></i> Please wait... Images are uploading.</span>
+                                </div>
+                            }
                             @if (HotelRoomModel.ImageUrls != null && HotelRoomModel.ImageUrls.Count > 0)
                             {
                                 int photoCounter = 1;
@@ -74,8 +80,8 @@
 
 @code {
 
-        [Parameter]
-        public int? Id { get; set; }
+    [Parameter]
+    public int? Id { get; set; }
 
     private HotelRoomDTO HotelRoomModel { get; set; } = new HotelRoomDTO();
     private string Title { get; set; } = "Create";
@@ -83,6 +89,8 @@
 
     //MyDelete
     private List<string> updateDeleteList { get; set; } = new List<string>();
+
+    private bool HasImageUploadProcessStarted { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -159,6 +167,7 @@
     //then adds list of file paths to DTO imageUrls
     private async Task HandleImageUpload(InputFileChangeEventArgs e)
     {
+        HasImageUploadProcessStarted = true;
         try
         {
             var images = new List<string>();
@@ -200,7 +209,8 @@
                     return;
                 }
             }
-        }
+            HasImageUploadProcessStarted = false;
+        }   
         catch (Exception ex)
         {
             await JsRuntime.ToastrError(ex.Message);
