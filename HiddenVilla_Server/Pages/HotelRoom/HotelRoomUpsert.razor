@@ -7,7 +7,7 @@
 @inject IHotelRoomRepository HotelRoomRepository
 @inject IHotelImageRepository HotelImagesRepository
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JsRuntime
+@inject IJSRuntime JsRuntime 
 @inject IFileUpload FileUpload
 
 
@@ -74,12 +74,15 @@
 
 @code {
 
-    [Parameter]
-    public int? Id { get; set; }
+        [Parameter]
+        public int? Id { get; set; }
 
     private HotelRoomDTO HotelRoomModel { get; set; } = new HotelRoomDTO();
     private string Title { get; set; } = "Create";
     private HotelRoomImageDTO RoomImage { get; set; } = new HotelRoomImageDTO();
+
+    //MyDelete
+    private List<string> updateDeleteList { get; set; } = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -118,8 +121,16 @@
             {
                 //update
                 var updateRoomResult = await HotelRoomRepository.UpdateHotelRoom(HotelRoomModel.Id, HotelRoomModel);
-                if(HotelRoomModel.ImageUrls != null && HotelRoomModel.ImageUrls.Any())
+                if(( HotelRoomModel.ImageUrls != null && HotelRoomModel.ImageUrls.Any() ) || (updateDeleteList != null && updateDeleteList.Any()))
                 {
+                    //update delete
+                    foreach(var imageName in updateDeleteList)
+                    {
+                        FileUpload.DeleteFile(imageName);
+                        await HotelImagesRepository.DeleteHotelRoomByImageUrl(imageName);
+
+                    }
+
                     //add images only if new
                     await AddHotelRoomImage(updateRoomResult);
                 }
@@ -130,7 +141,6 @@
 
                 //create
                 var createdResult = await HotelRoomRepository.CreateHotelRoom(HotelRoomModel);
-                Console.WriteLine("Got to the after else in create");
                 await AddHotelRoomImage(createdResult);
 
                 await JsRuntime.ToastrSuccess("Hotel room created successfully");
@@ -197,7 +207,7 @@
         }
     }
 
-
+    //After hotelRoom is written to the database it makes a seperate entry for each image in the image Db
     private async Task AddHotelRoomImage(HotelRoomDTO roomDetails)
     {
 
@@ -228,6 +238,15 @@
                 //adjust list, go to folder and erase image, adjust view/remove button
                 var result = FileUpload.DeleteFile(imageName);
             }
+            //update
+            else
+            {
+                updateDeleteList ??= new List<string>(); //incase of null error
+                updateDeleteList.Add(imageName);
+
+            }
+
+
             HotelRoomModel.ImageUrls.RemoveAt(imageIndex);
         }
         catch(Exception ex)

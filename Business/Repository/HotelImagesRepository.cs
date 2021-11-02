@@ -53,6 +53,20 @@ namespace Business.Repository
             return await _db.SaveChangesAsync();
         }
 
+        //I added this - different than tutorial
+        public async Task<int> DeleteHotelRoomByImageUrl(string roomImageUrl)
+        {
+            var imageList = await _db.HotelRoomImages.Where(x => x.RoomImageUrl.Contains(roomImageUrl)).ToListAsync();
+            foreach (var roomImageObject in imageList)
+            {
+                _db.HotelRoomImages.Remove(roomImageObject);
+            }
+
+            //Can also use this instead:
+            // _db.HotelRoomImages.RemoveRange(imageList); 
+            return await _db.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<HotelRoomImageDTO>> GetHotelRoomImages(int roomId)
         {
             //my first implementation
