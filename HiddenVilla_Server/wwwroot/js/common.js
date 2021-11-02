@@ -27,3 +27,11 @@ window.ShowSwal = (type, message) => {
         })
     }
 }
+
+function ShowDeleteConfirmationModel() {
+    $("#deleteConfirmationModal").modal('show');
+}
+
+function HideDeleteConfirmationModel() {
+    $("#deleteConfirmationModal").modal('hide');
+}

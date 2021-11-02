@@ -2,6 +2,7 @@
 @using Models
 @using Business.Repository.IRepository
 @inject IHotelRoomRepository HotelRoomRepository
+@inject IJSRuntime JsRuntime
 
 <div class="row mt-4">
     <div class="col-8">
@@ -38,6 +39,8 @@
                     <td>@room.SqFt</td>
                     <td>
                         <NavLink href="@($"hotel-room/edit/{room.Id}")" class="btn btn-primary">Edit</NavLink>
+                        <button class="btn btn-danger" @onclick="()=>handleDelete(room.Id)">Delete</button>
+                        
                     </td>
                 </tr>
                 }
@@ -53,10 +56,37 @@
     </div>
 </div>
 
+<DeleteConfirmation></DeleteConfirmation>
+
 @code {
     private IEnumerable<HotelRoomDTO> HotelRooms { get; set; } = new List<HotelRoomDTO>();
+    private int? DeleteRoomId { get; set; } = null;
+
     protected override async Task OnInitializedAsync()
     {
         HotelRooms = await HotelRoomRepository.GetAllHotelRooms();
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JsRuntime.InvokeVoidAsync("HideDeleteConfirmationModel");
+    }
+
+    private async Task handleDelete(int roomId)
+    {
+        DeleteRoomId = roomId;
+        await JsRuntime.InvokeVoidAsync("ShowDeleteConfirmationModel");
+    }
+
+    public async Task ConfirmDelete_Click(bool isConfirmed)
+    {
+        if(isConfirmed && DeleteRoomId != null)
+        {
+            await HotelRoomRepository.DeleteHotelRoom(DeleteRoomId.Value);
+            await JsRuntime.ToastrSuccess("Hotel Room Deleted Successfully");
+            HotelRooms = await HotelRoomRepository.GetAllHotelRooms();
+        }
+
+        await JsRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
     }
 }
