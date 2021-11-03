@@ -125,14 +125,7 @@ namespace Business.Repository.IRepository
             if (roomDetails != null)
             {
                 var allimages = await _db.HotelRoomImages.Where(x => x.RoomId == roomId).ToListAsync();
-                foreach( var image in allimages)
-                {
-                    if (File.Exists(image.RoomImageUrl))
-                    {
-                        Console.WriteLine($"Image Url: {image.RoomImageUrl}");
-                        File.Delete(image.RoomImageUrl);
-                    }
-                }
+                
 
                 _db.HotelRoomImages.RemoveRange(allimages);
                 _db.HotelRooms.Remove(roomDetails);

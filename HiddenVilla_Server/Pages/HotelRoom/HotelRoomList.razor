@@ -3,6 +3,7 @@
 @using Business.Repository.IRepository
 @inject IHotelRoomRepository HotelRoomRepository
 @inject IJSRuntime JsRuntime
+@inject HiddenVilla_Server.Service.IFileUpload FileUpload
 
 <div class="row mt-4">
     <div class="col-8">
@@ -56,7 +57,7 @@
     </div>
 </div>
 
-<DeleteConfirmation></DeleteConfirmation>
+<DeleteConfirmation ParentDelete="ConfirmDelete_Click"></DeleteConfirmation>
 
 @code {
     private IEnumerable<HotelRoomDTO> HotelRooms { get; set; } = new List<HotelRoomDTO>();
@@ -67,10 +68,7 @@
         HotelRooms = await HotelRoomRepository.GetAllHotelRooms();
     }
 
-    protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        await JsRuntime.InvokeVoidAsync("HideDeleteConfirmationModel");
-    }
+
 
     private async Task handleDelete(int roomId)
     {
@@ -82,11 +80,18 @@
     {
         if(isConfirmed && DeleteRoomId != null)
         {
+            HotelRoomDTO hotelRoom = await HotelRoomRepository.GetHotelRoom(DeleteRoomId.Value);
+            foreach(var image in hotelRoom.HotelRoomImages)
+            {
+                var imageName = image.RoomImageUrl.Replace($"RoomImages/", "");
+                FileUpload.DeleteFile(imageName);
+            }
+
             await HotelRoomRepository.DeleteHotelRoom(DeleteRoomId.Value);
             await JsRuntime.ToastrSuccess("Hotel Room Deleted Successfully");
             HotelRooms = await HotelRoomRepository.GetAllHotelRooms();
         }
 
-        await JsRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+        await JsRuntime.InvokeVoidAsync("HideDeleteConfirmationModel");
     }
 }
