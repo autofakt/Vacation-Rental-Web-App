@@ -38,11 +38,43 @@
                         <label>Sq ft.</label>
                         <InputText @bind-Value="HotelRoomModel.SqFt" class="form-control"></InputText>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="height:250px;">
                         <label>Details</label>
-                        <InputTextArea @bind-Value="HotelRoomModel.Details" class="form-control"></InputTextArea>
+                        @*<InputTextArea @bind-Value="HotelRoomModel.Details" class="form-control"></InputTextArea>*@
+                        <BlazoredTextEditor @ref="@QuillHtml" Placeholder="Please enter room details">
+                            <ToolbarContent>
+                                <select class="ql-header">
+                                    <option selected=""></option>
+                                    <option value="1"></option>
+                                    <option value="2"></option>
+                                    <option value="3"></option>
+                                    <option value="4"></option>
+                                    <option value="5"></option>
+                                </select>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                </span>
+                            </ToolbarContent>
+                            <EditorContent>
+                            </EditorContent>
+                        </BlazoredTextEditor>
+                        
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="padding-top: 70px;">
                         <InputFile OnChange="HandleImageUpload" multiple></InputFile>
                         <div class="row">
                             @if (HasImageUploadProcessStarted)
@@ -89,7 +121,7 @@
 
     //MyDelete
     private List<string> updateDeleteList { get; set; } = new List<string>();
-
+    public BlazoredTextEditor QuillHtml { get; set; } = new BlazoredTextEditor();
     private bool HasImageUploadProcessStarted { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
@@ -104,12 +136,39 @@
                 //HotelRoomImages gets the data from the database during GetHotelRoom function call
                 HotelRoomModel.ImageUrls = HotelRoomModel.HotelRoomImages.Select(u => u.RoomImageUrl).ToList();
             }
+            
         }
         else
         {
             //create
             HotelRoomModel = new HotelRoomDTO(); // not needed it appears
         }
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+        bool loading = true;
+        while (loading)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(HotelRoomModel.Details))
+                {
+                    await this.QuillHtml.LoadHTMLContent(HotelRoomModel.Details);
+                }
+                loading = false;
+            }
+            catch
+            {
+                await Task.Delay(10);
+                loading = true;
+            }
+        }
+
+
+        //return base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task HandleHotelRoomUpsert()
@@ -127,6 +186,7 @@
 
             if (HotelRoomModel.Id != 0 && Title == "Update")
             {
+                HotelRoomModel.Details = await QuillHtml.GetHTML();
                 //update
                 var updateRoomResult = await HotelRoomRepository.UpdateHotelRoom(HotelRoomModel.Id, HotelRoomModel);
                 if(( HotelRoomModel.ImageUrls != null && HotelRoomModel.ImageUrls.Any() ) || (updateDeleteList != null && updateDeleteList.Any()))
@@ -148,6 +208,7 @@
             {
 
                 //create
+                HotelRoomModel.Details = await QuillHtml.GetHTML();
                 var createdResult = await HotelRoomRepository.CreateHotelRoom(HotelRoomModel);
                 await AddHotelRoomImage(createdResult);
 
@@ -162,6 +223,8 @@
 
         NavigationManager.NavigateTo("hotel-room");
     }
+
+
 
     //Checks if files are correct format, makes file path and uploads to server,
     //then adds list of file paths to DTO imageUrls
@@ -210,7 +273,7 @@
                 }
             }
             HasImageUploadProcessStarted = false;
-        }   
+        }
         catch (Exception ex)
         {
             await JsRuntime.ToastrError(ex.Message);
@@ -220,19 +283,21 @@
     //After hotelRoom is written to the database it makes a seperate entry for each image in the image Db
     private async Task AddHotelRoomImage(HotelRoomDTO roomDetails)
     {
-
-        foreach (var imageUrl in HotelRoomModel.ImageUrls)
+        if (HotelRoomModel.ImageUrls.Count() > 0) // added this
         {
-
-            if (HotelRoomModel.HotelRoomImages == null||HotelRoomModel.HotelRoomImages.Where(x => x.RoomImageUrl == imageUrl).Count() == 0)
+            foreach (var imageUrl in HotelRoomModel.ImageUrls)
             {
 
-                RoomImage = new HotelRoomImageDTO()
+                if (HotelRoomModel.HotelRoomImages == null || HotelRoomModel.HotelRoomImages.Where(x => x.RoomImageUrl == imageUrl).Count() == 0)
                 {
-                    RoomId = roomDetails.Id,
-                    RoomImageUrl = imageUrl
-                };
-                await HotelImagesRepository.CreateHotelRoomImage(RoomImage);
+
+                    RoomImage = new HotelRoomImageDTO()
+                    {
+                        RoomId = roomDetails.Id,
+                        RoomImageUrl = imageUrl
+                    };
+                    await HotelImagesRepository.CreateHotelRoomImage(RoomImage);
+                }
             }
         }
     }
