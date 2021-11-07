@@ -4,7 +4,8 @@
 @inject IHotelRoomRepository HotelRoomRepository
 @inject IJSRuntime JsRuntime
 @inject HiddenVilla_Server.Service.IFileUpload FileUpload
-@inject NavigationManager NavigationManager 
+@inject NavigationManager NavigationManager
+@attribute [Authorize]
 
 <div class="row mt-4">
     <div class="col-8">
@@ -31,28 +32,28 @@
             </thead>
             <tbody>
                 @if (HotelRooms.Any())
-            {
-                    foreach(var room in HotelRooms)
                 {
-                <tr>
-                    <td>@room.Name</td>
-                    <td>@room.Occupancy</td>
-                    <td>@room.RegularRate.ToString("c")</td>
-                    <td>@room.SqFt</td>
-                    <td>
-                        <NavLink href="@($"hotel-room/edit/{room.Id}")" class="btn btn-primary">Edit</NavLink>
-                        <button class="btn btn-danger" @onclick="()=>handleDelete(room.Id)">Delete</button>
-                        
-                    </td>
-                </tr>
+                    foreach (var room in HotelRooms)
+                    {
+                        <tr>
+                            <td>@room.Name</td>
+                            <td>@room.Occupancy</td>
+                            <td>@room.RegularRate.ToString("c")</td>
+                            <td>@room.SqFt</td>
+                            <td>
+                                <NavLink href="@($"hotel-room/edit/{room.Id}")" class="btn btn-primary">Edit</NavLink>
+                                <button class="btn btn-danger" @onclick="()=>handleDelete(room.Id)">Delete</button>
+
+                            </td>
+                        </tr>
+                    }
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="5">No records found</td>
-                </tr>
-            }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No records found</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -79,10 +80,10 @@
 
     public async Task ConfirmDelete_Click(bool isConfirmed)
     {
-        if(isConfirmed && DeleteRoomId != null)
+        if (isConfirmed && DeleteRoomId != null)
         {
             HotelRoomDTO hotelRoom = await HotelRoomRepository.GetHotelRoom(DeleteRoomId.Value);
-            foreach(var image in hotelRoom.HotelRoomImages)
+            foreach (var image in hotelRoom.HotelRoomImages)
             {
                 var imageName = image.RoomImageUrl.Replace($"{NavigationManager.BaseUri}RoomImages/", "");
                 FileUpload.DeleteFile(imageName);
