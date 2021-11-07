@@ -1,0 +1,62 @@
+﻿@page "/hotel-amenities"
+@using Models
+@using Business.Repository.IRepository @*needed for database and mapper*@
+@inject IHotelRoomRepository HotelRoomRepository
+@inject IJSRuntime JsRuntime
+
+<div class="row mt-4">
+<div class="col-8">
+    <h4 class="card-title text-info">Hotel Amenities</h4>
+</div>
+<div class="col-3 offset-1">
+    <NavLink href="hotel-amenities/create" class="btn btn-info form-control">Add New Amenity</NavLink>
+</div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Occupancy</th>
+                    <th>Rate</th>
+                    <th>Sqft</th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (HotelAmenity.Any())
+                {
+                    foreach (var amenity in HotelAmenity)
+                    {
+                        <tr>
+                            <td>@amenity.Name</td>
+                            <td>@amenity.Description</td>
+                            <td>@amenity.Timing</td>
+                            <td>@amenity.IconStyle</td>
+                            <td>
+                                <NavLink href="@($"hotel-amenity/edit/{amenity.Id}")" class="btn btn-primary">Edit</NavLink>
+                                <button class="btn btn-danger" >Delete</button>
+
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No records found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<HotelAmenityDTO> HotelAmenity { get; set; } = new List<HotelAmenityDTO>();
+    private int? DeleteRoomId { get; set; } = null;
+}
