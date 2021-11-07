@@ -7,8 +7,9 @@
 @inject IHotelRoomRepository HotelRoomRepository
 @inject IHotelImageRepository HotelImagesRepository
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JsRuntime 
+@inject IJSRuntime JsRuntime
 @inject IFileUpload FileUpload
+
 
 
 <div class="row mt-2 mb-5">
@@ -72,7 +73,7 @@
                             <EditorContent>
                             </EditorContent>
                         </BlazoredTextEditor>
-                        
+
                     </div>
                     <div class="form-group" style="padding-top: 70px;">
                         <InputFile OnChange="HandleImageUpload" multiple></InputFile>
@@ -124,19 +125,29 @@
     public BlazoredTextEditor QuillHtml { get; set; } = new BlazoredTextEditor();
     private bool HasImageUploadProcessStarted { get; set; } = false;
 
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+
+        var authenticationState = await AuthenticationState;
+        if (!authenticationState.User.IsInRole(Common.SD.Role_Admin))
+        {
+            var uri = new Uri(NavigationManager.Uri);
+            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={uri.LocalPath}");
+        }
         if (Id != null)
         {
             //updating
             Title = "Update";
             HotelRoomModel = await HotelRoomRepository.GetHotelRoom(Id.Value);
-            if(HotelRoomModel?.HotelRoomImages != null)
+            if (HotelRoomModel?.HotelRoomImages != null)
             {
                 //HotelRoomImages gets the data from the database during GetHotelRoom function call
                 HotelRoomModel.ImageUrls = HotelRoomModel.HotelRoomImages.Select(u => u.RoomImageUrl).ToList();
             }
-            
+
         }
         else
         {
@@ -189,10 +200,10 @@
                 HotelRoomModel.Details = await QuillHtml.GetHTML();
                 //update
                 var updateRoomResult = await HotelRoomRepository.UpdateHotelRoom(HotelRoomModel.Id, HotelRoomModel);
-                if(( HotelRoomModel.ImageUrls != null && HotelRoomModel.ImageUrls.Any() ) || (updateDeleteList != null && updateDeleteList.Any()))
+                if ((HotelRoomModel.ImageUrls != null && HotelRoomModel.ImageUrls.Any()) || (updateDeleteList != null && updateDeleteList.Any()))
                 {
                     //update delete
-                    foreach(var imageName in updateDeleteList)
+                    foreach (var imageName in updateDeleteList)
                     {
                         FileUpload.DeleteFile(imageName);
                         await HotelImagesRepository.DeleteHotelRoomByImageUrl(imageName);
@@ -306,9 +317,9 @@
     {
         try
         {
-            var imageIndex = HotelRoomModel.ImageUrls.FindIndex(x=>x == imageUrl);
+            var imageIndex = HotelRoomModel.ImageUrls.FindIndex(x => x == imageUrl);
             var imageName = imageUrl.Replace($"{NavigationManager.BaseUri}RoomImages/", "");
-            if(HotelRoomModel.Id==0 && Title == "create")
+            if (HotelRoomModel.Id == 0 && Title == "create")
             {
                 //adjust list, go to folder and erase image, adjust view/remove button
                 var result = FileUpload.DeleteFile(imageName);
@@ -324,7 +335,7 @@
 
             HotelRoomModel.ImageUrls.RemoveAt(imageIndex);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             await JsRuntime.ToastrError(ex.Message);
         }
