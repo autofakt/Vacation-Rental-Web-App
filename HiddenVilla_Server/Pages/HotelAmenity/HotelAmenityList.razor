@@ -1,7 +1,7 @@
 ﻿@page "/hotel-amenities"
 @using Models
 @using Business.Repository.IRepository @*needed for database and mapper*@
-@inject IHotelRoomRepository HotelRoomRepository
+@inject IHotelAmenityRepository HotelAmenityRepository
 @inject IJSRuntime JsRuntime
 
 <div class="row mt-4">
@@ -9,7 +9,7 @@
     <h4 class="card-title text-info">Hotel Amenities</h4>
 </div>
 <div class="col-3 offset-1">
-    <NavLink href="hotel-amenities/create" class="btn btn-info form-control">Add New Amenity</NavLink>
+    <NavLink href="hotel-amenity/create" class="btn btn-info form-control">Add New Amenity</NavLink>
 </div>
 </div>
 
@@ -19,18 +19,18 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Occupancy</th>
-                    <th>Rate</th>
-                    <th>Sqft</th>
+                    <th>Description</th>
+                    <th>Timing</th>
+                    <th>IconStyle</th>
                     <th>
 
                     </th>
                 </tr>
             </thead>
             <tbody>
-                @if (HotelAmenity.Any())
+                @if (HotelAmenities.Any())
                 {
-                    foreach (var amenity in HotelAmenity)
+                    foreach (var amenity in HotelAmenities)
                     {
                         <tr>
                             <td>@amenity.Name</td>
@@ -57,6 +57,11 @@
 </div>
 
 @code {
-    private IEnumerable<HotelAmenityDTO> HotelAmenity { get; set; } = new List<HotelAmenityDTO>();
+    private IEnumerable<HotelAmenityDTO> HotelAmenities { get; set; } = new List<HotelAmenityDTO>();
     private int? DeleteRoomId { get; set; } = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        HotelAmenities = await HotelAmenityRepository.GetAllHotelAmenities();
+    }
 }
