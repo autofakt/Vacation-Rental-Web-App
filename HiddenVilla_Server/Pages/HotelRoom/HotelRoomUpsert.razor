@@ -307,7 +307,7 @@
         try
         {
             var imageIndex = HotelRoomModel.ImageUrls.FindIndex(x=>x == imageUrl);
-            var imageName = imageUrl.Replace($"RoomImages/", "");
+            var imageName = imageUrl.Replace($"{NavigationManager.BaseUri}RoomImages/", "");
             if(HotelRoomModel.Id==0 && Title == "create")
             {
                 //adjust list, go to folder and erase image, adjust view/remove button
