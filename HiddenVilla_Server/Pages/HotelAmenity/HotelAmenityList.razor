@@ -3,15 +3,15 @@
 @using Business.Repository.IRepository @*needed for database and mapper*@
 @inject IHotelAmenityRepository HotelAmenityRepository
 @inject IJSRuntime JsRuntime
-@attribute [Authorize]
+@attribute [Authorize(Roles = Common.SD.Role_Admin)]
 
 <div class="row mt-4">
-<div class="col-8">
-    <h4 class="card-title text-info">Hotel Amenities</h4>
-</div>
-<div class="col-3 offset-1">
-    <NavLink href="hotel-amenity/create" class="btn btn-info form-control">Add New Amenity</NavLink>
-</div>
+    <div class="col-8">
+        <h4 class="card-title text-info">Hotel Amenities</h4>
+    </div>
+    <div class="col-3 offset-1">
+        <NavLink href="hotel-amenity/create" class="btn btn-info form-control">Add New Amenity</NavLink>
+    </div>
 </div>
 
 <div class="row mt-4">
@@ -40,7 +40,7 @@
                             <td><i class="fas fa-@amenity.IconStyle"></i></td>
                             <td>
                                 <NavLink href="@($"hotel-amenity/edit/{amenity.Id}")" class="btn btn-primary">Edit</NavLink>
-                                <button class="btn btn-danger" >Delete</button>
+                                <button class="btn btn-danger">Delete</button>
 
                             </td>
                         </tr>
