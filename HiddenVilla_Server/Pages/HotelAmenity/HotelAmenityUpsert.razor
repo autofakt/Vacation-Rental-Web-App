@@ -21,21 +21,21 @@
                     </div>
                     <div class="form-group">
                         <label>Description</label>
-                        <InputNumber @bind-Value="HotelAmenityModel.Description" class="form-control"></InputNumber>
+                        <InputText @bind-Value="HotelAmenityModel.Description" class="form-control"></InputText>
                         <ValidationMessage For="()=>HotelAmenityModel.Description"></ValidationMessage>
                     </div>
                     <div class="form-group">
                         <label>Timing</label>
-                        <InputNumber @bind-Value="HotelAmenityModel.Timing" class="form-control"></InputNumber>
+                        <InputText @bind-Value="HotelAmenityModel.Timing" class="form-control"></InputText>
                         <ValidationMessage For="()=>HotelAmenityModel.Timing"></ValidationMessage>
                     </div>
                     <div class="form-group">
-                        <label>IconStyle</label>
+                        <label>Icon Style</label>
                         <InputText @bind-Value="HotelAmenityModel.IconStyle" class="form-control"></InputText>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary">@Title Amenity </button>
-                        <NavLink href="hotel-room" class="btn btn-secondary">Back to Index</NavLink>
+                        <NavLink href="hotel-amenity" class="btn btn-secondary">Back to Index</NavLink>
                     </div>
                 </EditForm>
             </div>
@@ -49,6 +49,24 @@
 
     private HotelAmenityDTO HotelAmenityModel { get; set; } = new HotelAmenityDTO();
     private string Title { get; set; } = "Create";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != null)
+        {
+            //updating
+            Title = "Update";
+            HotelAmenityModel = await HotelAmenityRepository.GetHotelAmenity(Id.Value);
+            
+
+        }
+        else
+        {
+            //create
+            HotelAmenityModel = new HotelAmenityDTO(); // not needed it appears
+        }
+    }
 
 
     private async Task HandleHotelAmenityUpsert()
