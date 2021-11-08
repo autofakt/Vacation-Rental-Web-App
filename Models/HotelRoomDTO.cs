@@ -21,7 +21,7 @@ namespace Models
 
         public string SqFt { get; set; }
 
-        public virtual ICollection<HotelRoomImageDTO> HotelRoomImages { get; set; } // no migration because its virtual
-        public List<string> ImageUrls { get; set; }
+        public virtual ICollection<HotelRoomImageDTO> HotelRoomImages { get; set; } // no migration because its virtual Images get stored here from the get functions
+        public List<string> ImageUrls { get; set; } // not stored works sort of temp
     }
 }

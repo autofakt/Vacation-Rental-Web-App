@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using HiddenVilla_Server.Service;
 using Business.Repository;
 using Microsoft.AspNetCore.Identity;
+using HiddenVilla_Server.Service.IService;
 
 namespace HiddenVilla_Server
 {
@@ -34,12 +35,14 @@ namespace HiddenVilla_Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders().AddDefaultUI();
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IHotelRoomRepository, HotelRoomRepository>();
-            services.AddScoped<IHotelImageRepository, HotelImagesRepository>();
             services.AddScoped<IHotelAmenityRepository, HotelAmenityRepository>();
+            services.AddScoped<IDbInitializer, DbInitializer > ();
+            services.AddScoped<IHotelImageRepository, HotelImagesRepository>();
             services.AddScoped<IFileUpload, FileUpload>();
             services.AddRazorPages();
             services.AddHttpContextAccessor();
@@ -48,7 +51,7 @@ namespace HiddenVilla_Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -66,7 +69,7 @@ namespace HiddenVilla_Server
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            dbInitializer.Initalize();
             
 
             app.UseEndpoints(endpoints =>

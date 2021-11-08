@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HiddenVilla_Server.Service.IService
 {
-    interface IDbInitializer
+    public interface IDbInitializer
     {
         void Initalize();
             }
