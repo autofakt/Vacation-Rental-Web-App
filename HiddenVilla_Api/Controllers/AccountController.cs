@@ -29,6 +29,7 @@ namespace HiddenVilla_Api.Controllers
             _signInManager = signInManager;
         }
        
+        [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> SignUp([FromBody] UserRequestDTO userRequestDTO)
         {
