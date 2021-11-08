@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    //Default user is IdentityUser if one is not passed to IdentityDbContext. Here we pass our own ApplicationUser
+    //that has a name field which IdentityUser does not by default.
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
