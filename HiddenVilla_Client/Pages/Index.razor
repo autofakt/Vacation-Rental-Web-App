@@ -69,7 +69,7 @@
         try
         {
             HomeModel.EndDate = HomeModel.StartDate.AddDays(HomeModel.NoOfNights);
-            await localStorage.SetItemAsync("InitialRoomBookingInfo", HomeModel);
+            await localStorage.SetItemAsync(SD.Local_InitialBoking, HomeModel);
             navigationManager.NavigateTo("hotel/rooms", true);
 
             
