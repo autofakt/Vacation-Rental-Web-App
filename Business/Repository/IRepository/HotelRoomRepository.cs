@@ -32,7 +32,7 @@ namespace Business.Repository.IRepository
             return _mapper.Map<HotelRoom, HotelRoomDTO>(addedHotelRoom.Entity);
         }
 
-        public async Task<IEnumerable<HotelRoomDTO>> GetAllHotelRooms()
+        public async Task<IEnumerable<HotelRoomDTO>> GetAllHotelRooms(string checkInDate = null, string checkOutDate = null)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Business.Repository.IRepository
             
         }
 
-        public async Task<HotelRoomDTO> GetHotelRoom(int roomID)
+        public async Task<HotelRoomDTO> GetHotelRoom(int roomID, string checkInDate = null, string checkOutDate = null)
         {
             try
             {
