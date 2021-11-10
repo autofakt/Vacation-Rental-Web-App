@@ -68,7 +68,36 @@ namespace HiddenVilla_Api.Controllers
                     StatusCode = StatusCodes.Status400BadRequest
                 });
             }
-            var hotelRoom = await _hotelRoomRepository.GetHotelRoom(roomId.Value);
+
+            if (string.IsNullOrEmpty(checkInDate) || string.IsNullOrEmpty(checkOutDate))
+            {
+                return BadRequest(new ErrorModel()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    ErrorMessage = "All parameters need to be supplied"
+                });
+            }
+
+            if (!DateTime.TryParseExact(checkInDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dtCheckInDate))
+            {
+                return BadRequest(new ErrorModel()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    ErrorMessage = "Invalid Check-in date format. Must be in MM/dd/yyyy"
+                });
+            }
+
+            if (!DateTime.TryParseExact(checkOutDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dtCheckOutDate))
+            {
+                return BadRequest(new ErrorModel()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    ErrorMessage = "Invalid Check-out date format. Must be in MM/dd/yyyy"
+                });
+            }
+
+
+            var hotelRoom = await _hotelRoomRepository.GetHotelRoom(roomId.Value, checkInDate, checkOutDate);
             if (hotelRoom == null)
             {
                 return BadRequest(new ErrorModel()
