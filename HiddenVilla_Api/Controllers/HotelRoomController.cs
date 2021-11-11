@@ -33,8 +33,8 @@ namespace HiddenVilla_Api.Controllers
                     ErrorMessage = "All parameters need to be supplied"
                 });
             }
-
-            if(!DateTime.TryParseExact(checkInDate,"dd/MM/yyyy",CultureInfo.InvariantCulture,DateTimeStyles.None,out var dtCheckInDate))
+            
+            if(!DateTime.TryParseExact(checkInDate,"MM/dd/yyyy",CultureInfo.InvariantCulture,DateTimeStyles.None,out var dtCheckInDate))
             {
                 return BadRequest(new ErrorModel()
                 {
@@ -43,7 +43,7 @@ namespace HiddenVilla_Api.Controllers
                 });
             }
 
-            if (!DateTime.TryParseExact(checkOutDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dtCheckOutDate))
+            if (!DateTime.TryParseExact(checkOutDate, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dtCheckOutDate))
             {
                 return BadRequest(new ErrorModel()
                 {
