@@ -4,27 +4,27 @@
 @inject IHotelRoomService hotelRoomService
 
 
-<form class="bg-light">
+<EditForm Model="HomeModel" OnValidSubmit="SaveBookingInfo" class="bg-light">
 
     <div class="pt-3 pb-2 px-5 mx-1 mx-md-0 bg-secondary">
-
+        <DataAnnotationsValidator/>
         <div class="row px-3 mx-3">
             <div class="col-6 col-md-4">
                 <div class="form-group">
                     <label class="text-warning">Check in Date</label>
-                    <input type="date" class="form-control" />
+                    <InputDate @bind-Value="HomeModel.StartDate"  class="form-control"  />
                 </div>
             </div>
             <div class="col-6 col-md-4">
                 <div class="form-group">
                     <label class="text-warning">Check Out Date</label>
-                    <input disabled="disabled" readonly="readonly" type="date" class="form-control" />
+                    <input @bind="HomeModel.EndDate" disabled="disabled" readonly="readonly" type="date" class="form-control" />
                 </div>
             </div>
             <div class=" col-4 col-md-2">
                 <div class="form-group">
                     <label class="text-warning">No. of nights</label>
-                    <select class="form-control">
+                    <select @bind="HomeModel.NoOfNights" class="form-control">
                         <option value="Select" selected disabled="disabled">(Select No. Of Nights)</option>
                         @for (var i = 1; i <= 10; i++)
                         {
@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-</form>
+</EditForm>
 <div class="mt-4 mx-4 px-0 px-md-5 mx-md-5">
 
 
@@ -119,6 +119,7 @@
             if (await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking) != null)
             {
                 HomeModel = await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking);
+                Console.WriteLine($"Start: {HomeModel.StartDate} , End: {HomeModel.EndDate} , NoNights: {HomeModel.NoOfNights} ");
             }
             else
             {
@@ -139,4 +140,9 @@
     {
         Rooms = await hotelRoomService.GetHotelRooms(HomeModel.StartDate.ToString("MM/dd/yyyy"), HomeModel.EndDate.ToString("MM/dd/yyyy"));
     }
+
+    private async Task SaveBookingInfo()
+        {
+
+        }
 }
