@@ -1,6 +1,7 @@
 ﻿@page "/hotel/rooms"
 @inject ILocalStorageService localStorage
-@inject JSRuntime jsRuntime
+@inject IJSRuntime jsRuntime
+@inject IHotelRoomService hotelRoomService 
 
 <h3>HotelRooms</h3>
 
@@ -20,13 +21,19 @@
             {
                 HomeModel.NoOfNights = 1;
             }
+           await LoadRooms();
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
 
-            await jsRuntime.ToastrError(ex.Message);
+            await jsRuntime.ToastrError(e.Message);
 
         }
-        // dont have yet await LoadRooms(); // call api
+
+    }
+
+    private async Task LoadRooms()
+    {
+        Rooms = await hotelRoomService.GetHotelRooms(HomeModel.StartDate.ToString("MM/dd/yyyy"), HomeModel.EndDate.ToString("MM/dd/yyyy"));
     }
 }
