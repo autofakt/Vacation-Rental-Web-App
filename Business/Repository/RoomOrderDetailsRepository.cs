@@ -2,6 +2,7 @@
 using Business.Repository.IRepository;
 using Common;
 using DataAccess.Data;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -39,19 +40,74 @@ namespace Business.Repository
             }
         }
 
-        public Task<IEnumerable<RoomOrderDetailsDTO>> GetAllOrderRoomDetails()
+        public async Task<IEnumerable<RoomOrderDetailsDTO>> GetAllOrderRoomDetails()
         {
-            throw new NotImplementedException();
+            try
+            {
+                //eager loading -> foreign key related data is loaded from the database as part of the initial query 
+                IEnumerable<RoomOrderDetailsDTO> roomOrders =
+                    _mapper.Map<IEnumerable<RoomOrderDetails>, IEnumerable<RoomOrderDetailsDTO>>(_db.RoomOrderDetails.Include(u => u.HotelRoom));
+                return roomOrders;
+            }catch(Exception e)
+            {
+                return null;
+            }
         }
 
-        public Task<RoomOrderDetailsDTO> GetOrderRoomDetail(int roomOrderId)
+        public async Task<RoomOrderDetailsDTO> GetOrderRoomDetail(int roomOrderId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //eager loading -> queries the first roomOrder that matches roomOrderID and then eager loads the hotel room followed by the images.
+                RoomOrderDetails roomOrder = 
+                    await _db.RoomOrderDetails.Include(u => u.HotelRoom).ThenInclude(u=>u.HotelRoomImages).FirstOrDefaultAsync(u=>u.Id==roomOrderId);
+                RoomOrderDetailsDTO roomOrderDTO = _mapper.Map<RoomOrderDetails, RoomOrderDetailsDTO>(roomOrder);
+
+                //No total days in roomOrderDTO or Model or Db. Manually calculating and inputting.
+                roomOrderDTO.HotelRoomDTO.TotalDays = roomOrderDTO.CheckOutDate.Subtract(roomOrderDTO.CheckInDate).Days;
+                return roomOrderDTO;
+
+            }catch(Exception e)
+            {
+                return null;
+            }
         }
 
-        public Task<bool> IsRoomBooked(int RoomId, DateTime checkInDate, DateTime checkOutDate)
+        public async Task<bool> IsRoomBooked(int RoomId, DateTime checkInDate, DateTime checkOutDate)
         {
-            throw new NotImplementedException();
+            //confusing
+            var status = false;
+            var existingBooking = await _db.RoomOrderDetails.Where(x => x.RoomId == RoomId && x.IsPaymentSuccessful &&
+            //check if checkin date that user wants does not fall in between any dates for room that is booked
+            (checkInDate < x.CheckOutDate && checkInDate.Date > x.CheckInDate
+            //check if checkout date that user wnats does not fall in between any dates for rom that is booked
+            || checkOutDate.Date > x.CheckInDate.Date && checkInDate.Date < x.CheckInDate.Date
+            )).FirstOrDefaultAsync();
+
+            if(existingBooking != null)
+            {
+                status = true;
+            }
+            return status;
+
+            //RoomOrderDetails roomOrder = await _db.RoomOrderDetails.FirstOrDefaultAsync(x => x.RoomId == RoomId);
+            //if (roomOrder != null)
+            //{
+            //    var resultCheckIn = DateTime.Compare(checkInDate, roomOrder.CheckInDate);
+            //    var resultCheckOut = DateTime.Compare(checkOutDate, roomOrder.CheckOutDate);
+            //    //earlier than
+            //    if (resultCheckIn < 0 && resultCheckOut < 0)
+            //        return true;
+            //    //later than
+            //    else if (resultCheckIn > 0 && resultCheckOut > 0)
+            //        return true;
+            //    else
+            //        return false;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
 
         public Task<RoomOrderDetailsDTO> MarkPaymentAsSuccessful(int id)
