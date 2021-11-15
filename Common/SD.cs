@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Common
-{
+{   //static details
     public static class SD
     {
         public const string Role_Admin = "Admin";
@@ -13,6 +13,9 @@ namespace Common
         public const string Role_Employee = "Employee";
 
         public const string Local_InitialBoking = "InitialRoomBookingInfo";
+        //For auth
+        public const string Local_Token = "JWT Token";
+        public const string Local_UserDetails = "User Details";
 
         //Status codes for RoomOrderDetails
         public const string Status_Pending = "Pending";
@@ -21,5 +24,6 @@ namespace Common
         public const string Status_CheckedOut = "Checked-Out";
         public const string Status_NoShow = "NoShow";
         public const string Status_Cancelled = "Cancelled";
+
     }
 }
