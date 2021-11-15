@@ -28,6 +28,7 @@ namespace HiddenVilla_Client
             builder.Services.AddScoped<IHotelAmenityService, HotelAmenityService>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<IRoomOrderDetailsService, RoomOrderDetailsService>();
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             await builder.Build().RunAsync();
         }
     }
