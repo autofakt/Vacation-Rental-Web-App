@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using HiddenVilla_Client.Service;
 using HiddenVilla_Client.Service.IService;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,8 @@ namespace HiddenVilla_Client
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPIUrl")) });
+            builder.Services.AddAuthorizationCore(); 
+            builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>(); //letting know we have custom implementation for authstateprovider
             builder.Services.AddScoped<IHotelRoomService, HotelRoomService>();
             builder.Services.AddScoped<IHotelAmenityService, HotelAmenityService>();
             builder.Services.AddBlazoredLocalStorage();
