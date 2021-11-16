@@ -1,4 +1,6 @@
 ﻿@page "/login"
+@inject IAuthenticationService authenticationService
+@inject NavigationManager navigationManager
 
 
 
@@ -6,8 +8,11 @@
 
 
 
-
-<form class="pt-4">
+<EditForm Model="UserForAuthentication" OnValidSubmit="LoginUser" class="pt-4">
+    <DataAnnotationsValidator />
+            @if (ShowAuthenticationErrors) {
+                <p class="text-center text-danger">@Errors</p>
+            }
     <div class="py-4">
         <div class=" row form-group ">
             <div class="col-6 offset-3 ">
@@ -19,20 +24,33 @@
 
                         <hr style="background-color:aliceblue" />
                         <div class="py-2">
-                            <input id="email" placeholder="Email..." class="form-control mb-2" />
-
+                            <InputText @bind-Value="UserForAuthentication.UserName" id="email" placeholder="Email..." class="form-control mb-2" />
+                            <ValidationMessage For="(()=>UserForAuthentication.UserName)"/>
                         </div>
                         <div class="py-2">
-                            <input type="password" placeholder="Password..." id="password" class="form-control mb-2" />
-
+                            <InputText @bind-Value="UserForAuthentication.Password" type="password" placeholder="Password..." id="password" class="form-control mb-2" />
+                            <ValidationMessage For="(()=>UserForAuthentication.Password)" />
                         </div>
-                        <div class="py-2 input-group">
-                            
-                            <button type="submit" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> Sign in</button>
 
-                        </div>
+                        @if (IsProcessing)
+                {
+                    <div class="py-2 input-group">
+
+                        <button type="submit" class="btn btn-success btn-block disabled"><i class="fas fa-sign-in-alt"></i> Please wait...</button>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="py-2 input-group">
+
+                        <button type="submit" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> Sign in</button>
+
+                    </div>
+                }
+                        
                         <div class="form-row py-2">
-                            
+
                             <div class="col">
                                 <a href="/registration"
                                    class="btn btn-primary text-white mt-3"><i class="fas fa-user-plus"></i> Register as a new user</a>
@@ -47,8 +65,43 @@
 
 
 
-</form>
+</EditForm>
 
 @code {
 
+    private AuthenticationDTO UserForAuthentication = new AuthenticationDTO();
+    public bool IsProcessing { get; set; } = false;
+    public bool ShowAuthenticationErrors { get; set; }
+    public string Errors { get; set; }
+    public string returnUrl { get; set; }
+
+    private async Task LoginUser()
+    {
+        ShowAuthenticationErrors = false;
+        IsProcessing = true;
+        var result = await authenticationService.Login(UserForAuthentication);
+        if (result.IsAuthSuccessful)
+        {
+            IsProcessing = false;
+
+            //gets you back to where you were coming from
+            var absoluteUri = new Uri(navigationManager.Uri);
+            var queryParam = HttpUtility.ParseQueryString(absoluteUri.Query);
+            returnUrl = queryParam["returnUrl"];
+            if (string.IsNullOrEmpty(returnUrl))
+            {
+                navigationManager.NavigateTo("/");
+            }
+            else
+            {
+                navigationManager.NavigateTo("/" + returnUrl);
+            }
+        }
+        else
+        {
+            IsProcessing = false;
+            Errors = result.ErrorMessage;
+            ShowAuthenticationErrors = true;
+        }
+    }
 }
