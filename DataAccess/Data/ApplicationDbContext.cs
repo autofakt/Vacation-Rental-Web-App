@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 namespace DataAccess.Data
 {
     //Default user is IdentityUser if one is not passed to IdentityDbContext. Here we pass our own ApplicationUser
-    //that has a [client] name field which IdentityUser does not by default.
+    //that has a [client] name field which IdentityUser does not by default. We also forced 2 identity types by making a db
+    // set for ApplicationUser
     public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

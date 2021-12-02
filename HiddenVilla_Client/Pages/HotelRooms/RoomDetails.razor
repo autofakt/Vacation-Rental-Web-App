@@ -2,6 +2,8 @@
 @inject IJSRuntime jsRuntime
 @inject ILocalStorageService localStorage
 @inject IHotelRoomService hotelRoomService
+@using Microsoft.AspNetCore.Authorization 
+@attribute [Authorize(Roles = SD.Role_Customer)]
 
 @if (HotelBooking?.OrderDetails?.HotelRoomDTO?.HotelRoomImages == null)
 {
