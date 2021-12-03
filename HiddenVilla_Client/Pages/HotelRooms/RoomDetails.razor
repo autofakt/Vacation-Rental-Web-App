@@ -180,11 +180,6 @@ else
         HotelBooking.OrderDetails.HotelRoomDTO.TotalDays = NoOfNights;
         HotelBooking.OrderDetails.HotelRoomDTO.TotalAmount = NoOfNights * HotelBooking.OrderDetails.HotelRoomDTO.RegularRate;
 
-        // var roomOrderDetailsSaved = await roomOrderDetailsService.SaveRoomOrderDetails(HotelBooking.OrderDetails);
-
-        //  await localStorage.SetItemAsync(SD.Local_RoomOrderDetails, roomOrderDetailsSaved);
-        //added to wrong method
-
     }
 
     private async Task HandleCheckout()
@@ -202,6 +197,7 @@ else
                 ProductName = HotelBooking.OrderDetails.HotelRoomDTO.Name,
                 ReturnUrl = "/hotel/room-details/" + Id
             };
+
             var result = await stripePaymentService.CheckOut(paymentDTO);
 
             HotelBooking.OrderDetails.StripeSessionId = result.Data.ToString();
