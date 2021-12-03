@@ -22,7 +22,7 @@ namespace HiddenVilla_Server.Service
 
         public bool DeleteFile(string fileName)
         {
-            bool status = false;
+            //bool status = false;
             try
             {
                 var path = $"{_webHostEnvironment.WebRootPath}\\RoomImages\\{fileName}";

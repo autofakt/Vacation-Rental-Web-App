@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+//Creates 3 roles and a admin user in the server automatically. No registration necessary.
 namespace HiddenVilla_Server.Service
 {
     public class DbInitializer : IDbInitializer
