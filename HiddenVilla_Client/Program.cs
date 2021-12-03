@@ -29,6 +29,7 @@ namespace HiddenVilla_Client
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<IRoomOrderDetailsService, RoomOrderDetailsService>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
             await builder.Build().RunAsync();
         }
     }

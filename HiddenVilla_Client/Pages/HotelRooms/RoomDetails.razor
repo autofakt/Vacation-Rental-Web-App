@@ -186,6 +186,14 @@ else
         {
             return;
         }
+
+        try
+        {
+
+        }catch(Exception e)
+        {
+            jsRuntime.ToastrError(e.Message);
+        }
     }
 
     private async Task<bool> HandleValidation()
