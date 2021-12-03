@@ -203,6 +203,7 @@ else
                 ReturnUrl = "/hotel/room-details/" + Id
             };
             var result = await stripePaymentService.CheckOut(paymentDTO);
+
             HotelBooking.OrderDetails.StripeSessionId = result.Data.ToString();
             HotelBooking.OrderDetails.RoomId = HotelBooking.OrderDetails.HotelRoomDTO.Id;
             HotelBooking.OrderDetails.TotalCost = HotelBooking.OrderDetails.HotelRoomDTO.TotalAmount;
@@ -211,7 +212,7 @@ else
 
             await localStorage.SetItemAsync(SD.Local_RoomOrderDetails, roomOrderDetailsSaved);
 
-            await jsRuntime.InvokeVoidAsync("redirectToCheckout", result.Data.ToString());
+            await jsRuntime.InvokeVoidAsync("redirectToCheckout", result.Data.ToString()); //not working
 
 
         }

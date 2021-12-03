@@ -40,7 +40,7 @@ namespace HiddenVilla_Api.Controllers
                         {
                             PriceData = new SessionLineItemPriceDataOptions
                             {
-                                UnitAmount = payment.Amount, //convert to cents
+                                UnitAmount = payment.Amount, 
                                 Currency="usd",
                                 ProductData = new SessionLineItemPriceDataProductDataOptions
                                 {
@@ -54,7 +54,7 @@ namespace HiddenVilla_Api.Controllers
                     SuccessUrl= domain+"/success-payment?session_id={{CHECKOUT_SESSION_ID}}",
                     CancelUrl = domain+payment.ReturnUrl
                 };
-                var service = new Stripe.Checkout.SessionService();
+                var service = new SessionService();
                 Session session = await service.CreateAsync(options);
                 return Ok(new SuccessModel()
                 {
@@ -67,7 +67,7 @@ namespace HiddenVilla_Api.Controllers
                     ErrorMessage = e.Message
                 });
             }
-            return View();
+            
         }
     }
 }
