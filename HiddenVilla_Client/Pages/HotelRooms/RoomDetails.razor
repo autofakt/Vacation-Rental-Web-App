@@ -180,9 +180,11 @@ else
         HotelBooking.OrderDetails.HotelRoomDTO.TotalDays = NoOfNights;
         HotelBooking.OrderDetails.HotelRoomDTO.TotalAmount = NoOfNights * HotelBooking.OrderDetails.HotelRoomDTO.RegularRate;
 
-        var roomOrderDetailsSaved = await roomOrderDetailsService.SaveRoomOrderDetails(HotelBooking.OrderDetails);
+        // var roomOrderDetailsSaved = await roomOrderDetailsService.SaveRoomOrderDetails(HotelBooking.OrderDetails);
 
-        await localStorage.SetItemAsync(SD.Local_RoomOrderDetails, roomOrderDetailsSaved);
+        //  await localStorage.SetItemAsync(SD.Local_RoomOrderDetails, roomOrderDetailsSaved);
+        //added to wrong method
+
     }
 
     private async Task HandleCheckout()
@@ -205,11 +207,17 @@ else
             HotelBooking.OrderDetails.RoomId = HotelBooking.OrderDetails.HotelRoomDTO.Id;
             HotelBooking.OrderDetails.TotalCost = HotelBooking.OrderDetails.HotelRoomDTO.TotalAmount;
 
+            var roomOrderDetailsSaved = await roomOrderDetailsService.SaveRoomOrderDetails(HotelBooking.OrderDetails);
+
+            await localStorage.SetItemAsync(SD.Local_RoomOrderDetails, roomOrderDetailsSaved);
+
+            await jsRuntime.InvokeVoidAsync("redirectToCheckout", result.Data.ToString());
 
 
-        }catch(Exception e)
+        }
+        catch(Exception e)
         {
-            jsRuntime.ToastrError(e.Message);
+            await jsRuntime.ToastrError(e.Message);
         }
     }
 
