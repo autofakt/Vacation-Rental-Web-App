@@ -9,7 +9,7 @@
 
 @if (HotelBooking?.OrderDetails?.HotelRoomDTO?.HotelRoomImages == null)
 {
-    //<div class="spinner"></div>
+    //<div class="spinner"></div> 
     <div style="position:fixed;top:50%;left:50%;margin-top:-50px;margin-left:-100px;">
         <img src="images/orange.gif" />
     </div>
@@ -20,7 +20,7 @@ else
 
         <div class="row p-2 my-3 " style="border-radius:20px; ">
             <div class="col-12 col-lg-7 p-4" style="border: 1px solid #ec9a13">
-                @* Changed color here*@
+                @* Changed color here to orange*@
                 <div class="row px-2 text-success border-bottom">
                     <div class="col-8 py-1"><p style="font-size:x-large;margin:0px;">Selected Room</p></div>
                     <div class="col-4 p-0"><a href="hotel/rooms" class="btn btn-secondary btn-block">Back to Room's</a></div>
@@ -138,7 +138,7 @@ else
             HotelBooking.OrderDetails = new RoomOrderDetailsDTO();
             if (Id != null)
             {
-                if (await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking) != null)
+                if (await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking) != null) //checks if local storage has the HomeVM which is start,end, and numOfNights
                 {
                     var roomInitialInfo = await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking);
                     HotelBooking.OrderDetails.HotelRoomDTO = await hotelRoomService.GetHotelRoomDetails(Id.Value,

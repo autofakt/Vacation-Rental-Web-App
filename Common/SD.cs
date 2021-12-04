@@ -12,7 +12,7 @@ namespace Common
         public const string Role_Customer = "Customer";
         public const string Role_Employee = "Employee";
 
-        public const string Local_InitialBoking = "InitialRoomBookingInfo";
+        public const string Local_InitialBoking = "InitialRoomBookingInfo";  //used to store home screen inputs in localStorage (start,end,numOfDays)
         public const string Local_RoomOrderDetails = "RoomOrderDetails";
         //For auth
         public const string Local_Token = "JWT Token";
