@@ -32,14 +32,19 @@ namespace Business.Repository.IRepository
             return _mapper.Map<HotelRoom, HotelRoomDTO>(addedHotelRoom.Entity);
         }
 
+        //Gets all hotel rooms and returns DTO versions
+        //Called when Go button pressed on home page.
         public async Task<IEnumerable<HotelRoomDTO>> GetAllHotelRooms(string checkInDate = null, string checkOutDate = null)
         {
             try
             {
                 IEnumerable<HotelRoomDTO> hotelRoomDTOs =
+                    //using eager loading to return the hotel rooms with image urls
                     _mapper.Map<IEnumerable<HotelRoom>, IEnumerable<HotelRoomDTO>>(_db.HotelRooms.Include(x => x.HotelRoomImages));
                 if (!string.IsNullOrEmpty(checkInDate) && !string.IsNullOrEmpty(checkOutDate))
                 {
+                    //sets the isBooked bool for each HotelRoomDTO by checking if roomOrderDetails db has a booking for
+                    //that particular during those check-in and check-out dates. roomOrderDetails becomes a booking after payment successfully processed.
                     foreach (HotelRoomDTO hotelRoom in hotelRoomDTOs)
                     {
                         hotelRoom.IsBooked = await IsRoomBooked(hotelRoom.Id, checkInDate, checkOutDate);

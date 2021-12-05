@@ -191,7 +191,10 @@ else
 
     private async Task LoadRooms()
     {
+        //hotelRoomServices gets all the rooms, sets image urls, sets isBooked bool field and returns hotelRoomDTO's.
         Rooms = await hotelRoomService.GetHotelRooms(HomeModel.StartDate.ToString("MM/dd/yyyy"), HomeModel.EndDate.ToString("MM/dd/yyyy"));
+
+        //Sets the total days into the DTO and calculates the total amount for later use.
         foreach (var room in Rooms)
         {
             room.TotalDays = HomeModel.NoOfNights;

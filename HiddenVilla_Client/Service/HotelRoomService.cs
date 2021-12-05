@@ -36,6 +36,8 @@ namespace HiddenVilla_Client.Service
 
         public async Task<IEnumerable<HotelRoomDTO>> GetHotelRooms(string checkInDate, string checkOutDate)
         {
+            //Client uses the HTTPClient to make an api call to HotelRoomController which then goes to the HotelRoom
+            //repository. Here it also loads the images and sets the isBooked field.
             var response = await _client.GetAsync($"api/hotelroom?checkInDate={checkInDate}&checkOutDate={checkOutDate}");
             var content = await response.Content.ReadAsStringAsync();
             var rooms = JsonConvert.DeserializeObject<IEnumerable<HotelRoomDTO>>(content);
