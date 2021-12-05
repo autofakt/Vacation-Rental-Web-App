@@ -27,5 +27,6 @@ namespace Models
 
         public virtual ICollection<HotelRoomImageDTO> HotelRoomImages { get; set; } // no migration because its virtual Images get stored here from the get functions
         public List<string> ImageUrls { get; set; } // not stored works sort of temp
+        public bool IsBooked { get; set; }
     }
 }
