@@ -4,6 +4,7 @@
 @inject IHotelRoomService hotelRoomService
 @inject IStripePaymentService stripePaymentService
 @inject IRoomOrderDetailsService roomOrderDetailsService
+
 @using Microsoft.AspNetCore.Authorization 
 @attribute [Authorize(Roles = SD.Role_Customer)]
 
@@ -116,7 +117,7 @@ else
                     </div>
                     <div class="form-group">
 
-                        @if (HotelBooking.OrderDetails.HotelRoomDTO.IsBooked)
+                        @if (HotelBooking.OrderDetails.HotelRoomDTO.IsBooked) //checks if room dates clash with booked room
                 {
                     <input class="btn btn-secondary form-control" value="Sold Out"/>
                 }
