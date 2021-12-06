@@ -17,8 +17,11 @@ namespace HiddenVilla_Client.Service
         {
             _client = client;
         }
+
+        //Gets called when user pressed book button on rooms home page. Grabs HotelRoomDTO
         public async Task<HotelRoomDTO> GetHotelRoomDetails(int roomId, string checkInDate, string checkOutDate)
         {
+            //makes API call to hotelRoomController 
             var response = await _client.GetAsync($"api/hotelroom/{roomId}?checkInDate={checkInDate}&checkOutDate={checkOutDate}");
             if (response.IsSuccessStatusCode)
             {
@@ -36,6 +39,8 @@ namespace HiddenVilla_Client.Service
 
         public async Task<IEnumerable<HotelRoomDTO>> GetHotelRooms(string checkInDate, string checkOutDate)
         {
+            //Client uses the HTTPClient to make an api call to HotelRoomController which then goes to the HotelRoom
+            //repository. Here it also loads the images and sets the isBooked field.
             var response = await _client.GetAsync($"api/hotelroom?checkInDate={checkInDate}&checkOutDate={checkOutDate}");
             var content = await response.Content.ReadAsStringAsync();
             var rooms = JsonConvert.DeserializeObject<IEnumerable<HotelRoomDTO>>(content);

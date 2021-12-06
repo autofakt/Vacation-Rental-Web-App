@@ -34,6 +34,7 @@ namespace HiddenVilla_Api.Controllers
                 });
             }
             
+            //checks if check-in date is in not in MM/dd/yyyy format
             if(!DateTime.TryParseExact(checkInDate,"MM/dd/yyyy",CultureInfo.InvariantCulture,DateTimeStyles.None,out var dtCheckInDate))
             {
                 return BadRequest(new ErrorModel()
@@ -43,6 +44,7 @@ namespace HiddenVilla_Api.Controllers
                 });
             }
 
+            //checks if check-out date is in not in MM/dd/yyyy format
             if (!DateTime.TryParseExact(checkOutDate, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dtCheckOutDate))
             {
                 return BadRequest(new ErrorModel()
@@ -52,10 +54,12 @@ namespace HiddenVilla_Api.Controllers
                 });
             }
 
+            //goes to the hotelRoomRepository in Business class library to get HotelRooms and then returns DTO versions.
             var allRooms = await _hotelRoomRepository.GetAllHotelRooms(checkInDate,checkOutDate);
             return Ok(allRooms);
         }
 
+        //Called when user pressed booked button on rooms home page
         [HttpGet("{roomId}")]
         public async Task<IActionResult> GetHotelRoom(int? roomId, string checkInDate, string checkOutDate)
         {
@@ -78,6 +82,7 @@ namespace HiddenVilla_Api.Controllers
                 });
             }
 
+            //error checks date format
             if (!DateTime.TryParseExact(checkInDate, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dtCheckInDate))
             {
                 return BadRequest(new ErrorModel()
@@ -87,6 +92,7 @@ namespace HiddenVilla_Api.Controllers
                 });
             }
 
+            //error checks date format
             if (!DateTime.TryParseExact(checkOutDate, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dtCheckOutDate))
             {
                 return BadRequest(new ErrorModel()
@@ -96,7 +102,7 @@ namespace HiddenVilla_Api.Controllers
                 });
             }
 
-
+            //makes call to hotelRoomRepository in Business class library
             var hotelRoom = await _hotelRoomRepository.GetHotelRoom(roomId.Value, checkInDate, checkOutDate);
             if (hotelRoom == null)
             {

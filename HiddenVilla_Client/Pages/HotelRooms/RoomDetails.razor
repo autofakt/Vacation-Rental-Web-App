@@ -4,6 +4,7 @@
 @inject IHotelRoomService hotelRoomService
 @inject IStripePaymentService stripePaymentService
 @inject IRoomOrderDetailsService roomOrderDetailsService
+
 @using Microsoft.AspNetCore.Authorization 
 @attribute [Authorize(Roles = SD.Role_Customer)]
 
@@ -29,21 +30,55 @@ else
                 <div class="row">
                     <div class="col-6">
                         <div id="" class="carousel slide mb-4 m-md-3 m-0 pt-3 pt-md-0" data-ride="carousel">
-                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                            <div id="carouselExampleIndicators_@HotelBooking.OrderDetails.HotelRoomDTO.Id" class="carousel slide" data-ride="carousel">
                                 <ol class="carousel-indicators">
-                                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+
+                                    @{
+                                        int imageIndex = 0; //counter for indicator buttons
+                                        int innerImageIndex = 0; //counter for images
+                                    }
+                                    <!--Sets the images in the Bootstrap carousel with indicators for each room-->
+                                    @foreach (var image in HotelBooking.OrderDetails.HotelRoomDTO.HotelRoomImages)
+                                    {
+                                        if (imageIndex == 0)
+                                        {
+                                            <li data-target="#carouselExampleIndicators_@HotelBooking.OrderDetails.HotelRoomDTO.Id" data-slide-to="imageIndex" class="active"></li>
+                                        }
+                                        else
+                                        {
+                                            <li data-target="#carouselExampleIndicators_@HotelBooking.OrderDetails.HotelRoomDTO.Id" data-slide-to="imageIndex"></li>
+                                        }
+                                        imageIndex++;
+                                    }
+                              
                                 </ol>
                                 <div class="carousel-inner">
-                                    <div class="carousel-item active">
-                                        <img class="d-block w-100" src="images/slide1.jpg" alt="First slide">
-                                    </div>
+
+
+
+                                    @foreach (var image in HotelBooking.OrderDetails.HotelRoomDTO.HotelRoomImages)
+                                    {
+                                        if (innerImageIndex == 0)
+                                        {
+                                            <div class="carousel-item active">
+                                                <img class="d-block w-100" style="border-radius:20px;" src="@image.RoomImageUrl" alt="First slide">
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="carousel-item">
+                                                <img class="d-block w-100" src="@image.RoomImageUrl" alt="Not first slide">
+                                            </div>
+                                        }
+                                        innerImageIndex++;
+                                    }
+
                                 </div>
-                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                <a class="carousel-control-prev" href="#carouselExampleIndicators_@HotelBooking.OrderDetails.HotelRoomDTO.Id" role="button" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="sr-only">Previous</span>
                                 </a>
-                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                <a class="carousel-control-next" href="#carouselExampleIndicators_@HotelBooking.OrderDetails.HotelRoomDTO.Id" role="button" data-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="sr-only">Next</span>
                                 </a>
@@ -116,7 +151,7 @@ else
                     </div>
                     <div class="form-group">
 
-                        @if (HotelBooking.OrderDetails.HotelRoomDTO.IsBooked)
+                        @if (HotelBooking.OrderDetails.HotelRoomDTO.IsBooked) //checks if room dates clash with booked room
                 {
                     <input class="btn btn-secondary form-control" value="Sold Out"/>
                 }
@@ -135,9 +170,9 @@ else
 
 @code {
     [Parameter]
-    public int? Id { get; set; }
+    public int? Id { get; set; } //nullable int for url paramater that gets passed in when user pressed booked button on hotelrooms page
 
-    public HotelRoomBookingVM HotelBooking { get; set; } = new HotelRoomBookingVM();
+    public HotelRoomBookingVM HotelBooking { get; set; } = new HotelRoomBookingVM(); //Viewmodel of roomOrderDetailsDTO
     private int NoOfNights { get; set; } = 1;
 
     protected override async Task OnInitializedAsync()
@@ -150,6 +185,8 @@ else
                 if (await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking) != null) //checks if local storage has the HomeVM which is start,end, and numOfNights
                 {
                     var roomInitialInfo = await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking);
+
+                    //hotelRoomsService is injected here, grabs hotelRoomDTO from hotelRoomService, loads images, sets is booked bool.
                     HotelBooking.OrderDetails.HotelRoomDTO = await hotelRoomService.GetHotelRoomDetails(Id.Value,
                         roomInitialInfo.StartDate.ToString("MM/dd/yyyy"), roomInitialInfo.EndDate.ToString("MM/dd/yyyy"));
                     NoOfNights = roomInitialInfo.NoOfNights;
@@ -170,6 +207,15 @@ else
                     HotelBooking.OrderDetails.HotelRoomDTO.TotalAmount = HotelBooking.OrderDetails.HotelRoomDTO.RegularRate;
 
                 }
+            }
+            //if user is logged in, then userDetails is in localStorage - set using authenticationService -> login()
+            if(await localStorage.GetItemAsync<UserDTO>(SD.Local_UserDetails) != null)
+            {
+                var userInfo = await localStorage.GetItemAsync<UserDTO>(SD.Local_UserDetails);
+                HotelBooking.OrderDetails.UserId = userInfo.Id;
+                HotelBooking.OrderDetails.Name = userInfo.Name;
+                HotelBooking.OrderDetails.Email = userInfo.Email;
+                HotelBooking.OrderDetails.Phone = userInfo.PhoneNo;
             }
         }
         catch (Exception e)

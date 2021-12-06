@@ -32,14 +32,19 @@ namespace Business.Repository.IRepository
             return _mapper.Map<HotelRoom, HotelRoomDTO>(addedHotelRoom.Entity);
         }
 
+        //Gets all hotel rooms and returns DTO versions
+        //Called when Go button pressed on home page.
         public async Task<IEnumerable<HotelRoomDTO>> GetAllHotelRooms(string checkInDate = null, string checkOutDate = null)
         {
             try
             {
                 IEnumerable<HotelRoomDTO> hotelRoomDTOs =
+                    //using eager loading to return the hotel rooms with image urls
                     _mapper.Map<IEnumerable<HotelRoom>, IEnumerable<HotelRoomDTO>>(_db.HotelRooms.Include(x => x.HotelRoomImages));
                 if (!string.IsNullOrEmpty(checkInDate) && !string.IsNullOrEmpty(checkOutDate))
                 {
+                    //sets the isBooked bool for each HotelRoomDTO by checking if roomOrderDetails db has a booking for
+                    //that particular during those check-in and check-out dates. roomOrderDetails becomes a booking after payment successfully processed.
                     foreach (HotelRoomDTO hotelRoom in hotelRoomDTOs)
                     {
                         hotelRoom.IsBooked = await IsRoomBooked(hotelRoom.Id, checkInDate, checkOutDate);
@@ -54,6 +59,7 @@ namespace Business.Repository.IRepository
             
         }
 
+        //Called when user clicks book on hotel rooms page. Gets hotel room by id, loads images, converts to DTO, then checks to see if booked already
         public async Task<HotelRoomDTO> GetHotelRoom(int roomID, string checkInDate = null, string checkOutDate = null)
         {
             try
@@ -65,6 +71,8 @@ namespace Business.Repository.IRepository
                 //var hotelImages = _mapper.Map<IEnumerable<HotelRoomImage>, IEnumerable<HotelRoomImageDTO>>(await _db.HotelRoomImages.Where(x => x.RoomId == roomID).ToListAsync());
                 //ICollection<HotelRoomImageDTO> imagesCollection = hotelImages.ToList();
                 //hotelRoom.HotelRoomImages = imagesCollection;
+
+                //checks to see if its already booked for those dates and sets value
                 if(!string.IsNullOrEmpty(checkInDate) && !string.IsNullOrEmpty(checkOutDate))
                 {
                     hotelRoom.IsBooked = await IsRoomBooked(roomID, checkInDate, checkOutDate);

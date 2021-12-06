@@ -2,6 +2,9 @@
 @inject ILocalStorageService localStorage
 @inject IRoomOrderDetailsService roomOrderDetailService
 
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = SD.Role_Customer)]
+
 <div class="container">
     @if (!IsPaymentComplete) //if payment is not complete show loading gif
     {
@@ -26,7 +29,7 @@
 </div>
 
 @code {
-    private bool IsPaymentComplete { get; set; } = false; 
+    private bool IsPaymentComplete { get; set; } = false;
     public int OrderId { get; set; }
 
     protected override async Task OnInitializedAsync()
