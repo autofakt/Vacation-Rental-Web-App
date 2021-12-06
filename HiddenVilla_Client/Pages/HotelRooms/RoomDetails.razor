@@ -136,9 +136,9 @@ else
 
 @code {
     [Parameter]
-    public int? Id { get; set; }
+    public int? Id { get; set; } //nullable int for url paramater that gets passed in when user pressed booked button on hotelrooms page
 
-    public HotelRoomBookingVM HotelBooking { get; set; } = new HotelRoomBookingVM();
+    public HotelRoomBookingVM HotelBooking { get; set; } = new HotelRoomBookingVM(); //Viewmodel of roomOrderDetailsDTO
     private int NoOfNights { get; set; } = 1;
 
     protected override async Task OnInitializedAsync()
@@ -151,6 +151,8 @@ else
                 if (await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking) != null) //checks if local storage has the HomeVM which is start,end, and numOfNights
                 {
                     var roomInitialInfo = await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking);
+
+                    //hotelRoomsService is injected here, grabs
                     HotelBooking.OrderDetails.HotelRoomDTO = await hotelRoomService.GetHotelRoomDetails(Id.Value,
                         roomInitialInfo.StartDate.ToString("MM/dd/yyyy"), roomInitialInfo.EndDate.ToString("MM/dd/yyyy"));
                     NoOfNights = roomInitialInfo.NoOfNights;

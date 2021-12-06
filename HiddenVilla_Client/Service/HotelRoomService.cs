@@ -17,8 +17,11 @@ namespace HiddenVilla_Client.Service
         {
             _client = client;
         }
+
+        //Gets called when user pressed book button on rooms home page. Grabs HotelRoomDTO
         public async Task<HotelRoomDTO> GetHotelRoomDetails(int roomId, string checkInDate, string checkOutDate)
         {
+            //makes API call to hotelRoomController 
             var response = await _client.GetAsync($"api/hotelroom/{roomId}?checkInDate={checkInDate}&checkOutDate={checkOutDate}");
             if (response.IsSuccessStatusCode)
             {
