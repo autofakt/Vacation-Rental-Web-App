@@ -1,0 +1,58 @@
+﻿@page "/hotel-room-order"
+@using Business.Repository.IRepository
+@using Models
+@using Radzen
+@inject IRoomOrderDetailsRepository RoomOrderDetailRepository
+@inject IJSRuntime jsRuntime
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = Common.SD.Role_Admin)]
+
+@if (!isLoading)
+{
+    <h4 class="card-title text-info">Hotel Room Order's</h4>
+    <RadzenDataGrid AllowFiltering="true"
+                    AllowColumnResize="true"
+                    FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true"
+                    AllowSorting="true"
+                    Data="@HotelRoomOrders" TItem="RoomOrderDetailsDTO" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+        <Columns>
+            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Name" Filterable="false" Title="Customer Name" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Email" Filterable="false" Title="Customer Name" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Phone" Filterable="false" Title="Customer Name" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="HotelRoomDTO.Name" Filterable="false" Title="Room" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Status" Filterable="false" Title="Status" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="CheckInDate" Filterable="false" Title="Check-In Date" Frozen="true" Width="70px" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    @String.Format("{0:d}", data.CheckInDate)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="CheckOutDate" Filterable="false" Title="Check-Out Date" Frozen="true" Width="70px" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    @String.Format("{0:d}", data.CheckOutDate)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Id" Filterable="false" Title="Id" Frozen="true" Width="70px" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <NavLink class="btn btn-primary" href="@($"hotel-room-order/details/{data.Id}")">Edit Here</NavLink>
+                </Template>
+            </RadzenDataGridColumn>
+
+        </Columns>
+    </RadzenDataGrid>
+}
+else
+{
+    <p>loading...</p>
+}
+
+@code {
+    private IEnumerable<RoomOrderDetailsDTO> HotelRoomOrders { get; set; } = new List<RoomOrderDetailsDTO>();
+    private bool isLoading { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        HotelRoomOrders = await RoomOrderDetailRepository.GetAllOrderRoomDetails();
+        isLoading = false;
+    }
+}
