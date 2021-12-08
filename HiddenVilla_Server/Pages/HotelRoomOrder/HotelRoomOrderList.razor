@@ -17,8 +17,8 @@
                     Data="@HotelRoomOrders" TItem="RoomOrderDetailsDTO" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
         <Columns>
             <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Name" Filterable="false" Title="Customer Name" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Email" Filterable="false" Title="Customer Name" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Phone" Filterable="false" Title="Customer Name" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Email" Filterable="false" Title="Customer Email" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Phone" Filterable="false" Title="Customer Phone" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
             <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="HotelRoomDTO.Name" Filterable="false" Title="Room" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
             <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Status" Filterable="false" Title="Status" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
             <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="CheckInDate" Filterable="false" Title="Check-In Date" Frozen="true" Width="70px" TextAlign="TextAlign.Center">
@@ -31,9 +31,9 @@
                     @String.Format("{0:d}", data.CheckOutDate)
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Id" Filterable="false" Title="Id" Frozen="true" Width="70px" TextAlign="TextAlign.Center">
+            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Id" Filterable="false" Title="" Frozen="true" Width="70px" TextAlign="TextAlign.Center">
                 <Template Context="data">
-                    <NavLink class="btn btn-primary" href="@($"hotel-room-order/details/{data.Id}")">Edit Here</NavLink>
+                    <NavLink class="btn btn-primary" href="@($"hotel-room-order/details/{data.Id}")">Details</NavLink>
                 </Template>
             </RadzenDataGridColumn>
 
