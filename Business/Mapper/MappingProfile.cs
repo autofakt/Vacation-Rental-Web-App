@@ -17,7 +17,11 @@ namespace Business.Mapper
             CreateMap<HotelRoom, HotelRoomDTO>();
             CreateMap<HotelRoomImage, HotelRoomImageDTO>().ReverseMap();
             CreateMap<HotelAmenity, HotelAmenityDTO>().ReverseMap();
-            CreateMap<RoomOrderDetails, RoomOrderDetailsDTO>().ReverseMap();
+
+            //No reverse here because it was not loading room in server room orders. RoomOrderDetails has HotelRoom
+            //while RoomOrderDetailsDTO has HotelRoomDTO
+            CreateMap<RoomOrderDetails, RoomOrderDetailsDTO>().ForMember(x=>x.HotelRoomDTO, opt=>opt.MapFrom(c=>c.HotelRoom));
+            CreateMap<RoomOrderDetailsDTO, RoomOrderDetails>();
         }
     }
 }

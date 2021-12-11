@@ -43,6 +43,7 @@ namespace HiddenVilla_Server
             services.AddScoped<IHotelAmenityRepository, HotelAmenityRepository>();
             services.AddScoped<IDbInitializer, DbInitializer > ();
             services.AddScoped<IHotelImageRepository, HotelImagesRepository>();
+            services.AddScoped<IRoomOrderDetailsRepository, RoomOrderDetailsRepository>();
             services.AddScoped<IFileUpload, FileUpload>();
             services.AddRazorPages();
             services.AddHttpContextAccessor();
