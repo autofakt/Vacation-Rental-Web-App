@@ -31,13 +31,21 @@
                     @String.Format("{0:d}", data.CheckOutDate)
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Id" Filterable="false" Title="" Frozen="true" Width="70px" TextAlign="TextAlign.Center">
-                <Template Context="data">
-                    <NavLink class="btn btn-primary" href="@($"hotel-room-order/details/{data.Id}")">Details</NavLink>
-                </Template>
+            
+            <!-- This part was over kill, was considering making a details button that loads a new view with all the details and some options. No time.
+    <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="Id" Filterable="false" Title="" Frozen="true" Width="70px" TextAlign="TextAlign.Center">
+        <Template Context="data">
+            <NavLink class="btn btn-primary" href="@($"hotel-room-order/details/{data.Id}")">Details</NavLink>
+        </Template>
+    </RadzenDataGridColumn>
+    -->
+        <RadzenDataGridColumn TItem="RoomOrderDetailsDTO" Property="TotalCost" Filterable="false" Title="Cost" Frozen="true" Width="70px" TextAlign="TextAlign.Center">
+            <Template Context="data">
+                @data.TotalCost.ToString("C")
+            </Template>
             </RadzenDataGridColumn>
 
-        </Columns>
+</Columns>
     </RadzenDataGrid>
 }
 else
