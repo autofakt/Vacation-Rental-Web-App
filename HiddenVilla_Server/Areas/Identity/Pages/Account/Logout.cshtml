@@ -1,5 +1,6 @@
 ﻿@page
 @using Microsoft.AspNetCore.Identity
+<!--Needed for sign-out and passed in user-->
 @inject SignInManager<IdentityUser> SignInManager
 @{
     ViewData["Title"] = "Log out";
@@ -7,6 +8,7 @@
 
 @functions{
 
+    //custom implementation of logout
     public async Task<IActionResult> OnGet()
     {
         if (SignInManager.IsSignedIn(User))
