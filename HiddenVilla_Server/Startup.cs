@@ -36,6 +36,8 @@ namespace HiddenVilla_Server
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             
+            //needed to register identity <user,role> then needed to add our dbContext. Could of used AddDefaultIdentity here and wouldnt need to 
+            //do all that with user, roles, tokens, and UI. But since we are using a custom application this was needed. 
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders().AddDefaultUI();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
