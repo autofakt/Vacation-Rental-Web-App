@@ -6,6 +6,7 @@
 @inject IHotelAmenityService hotelAmenityService
 
 @*add is processing if-else statement with orange loading*@
+<!--
 <AuthorizeView>
     <Authorized>
         <p>Welcome, @context.User.Identity.Name</p>
@@ -13,8 +14,8 @@
     <NotAuthorized>
         <p>Not signed in!</p>
     </NotAuthorized>
-</AuthorizeView>
-
+</AuthorizeView> -->
+<!--
 <div class="row p-0 m-0">
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
@@ -39,6 +40,7 @@
         </a>
     </div>
 </div>
+-->
 <EditForm Model="HomeModel" OnValidSubmit="SaveInitialData">
     <div class="row p-0 mx-0 mt-4">
         <div class="col-12 col-md-5  offset-md-1 pl-2  pr-2 pr-md-0">
@@ -77,7 +79,7 @@
     <div class="row">
         <div class="col-md-8 offset-md-2 text-center">
             <h2 class="text-warning">Explore our Amenities</h2>
-            <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+            <p class="lead">This is a list of the various amenities that are available in some of our properties. Units can have all and some can have none.</p>
         </div>
     </div>
     <div class="row">
