@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 //input
 namespace Models
 {
-    //Class to hold all values for user when they are registering.
+    //Class to hold all values for user when they are registering. Stores password entered as well.
     public class UserRequestDTO
     {
         [Required(ErrorMessage = "Name is required")]

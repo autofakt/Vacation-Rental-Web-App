@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Models
-{
+{ //user object whos authentication is successful but doesnt have password field on purpose.
     public class UserDTO
     {
         public string Id { get; set; }

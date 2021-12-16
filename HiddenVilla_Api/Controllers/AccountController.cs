@@ -31,7 +31,7 @@ namespace HiddenVilla_Api.Controllers
         public AccountController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager, 
             RoleManager<IdentityRole> roleManager,
-            IOptions<APISettings> options)
+            IOptions<APISettings> options) //gets all the values that we registered in startup and populates them into _apiSettings
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -76,6 +76,7 @@ namespace HiddenVilla_Api.Controllers
             
         }
    
+        //AuthenticationDTO is sent in body of request, contains user login email and password
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> SignIn([FromBody] AuthenticationDTO authenticationDTO)
@@ -92,7 +93,7 @@ namespace HiddenVilla_Api.Controllers
                         ErrorMessage = "Invalid Authentication"
                     });
                 }
-                //everything is valid, need to login user
+                //everything is valid, need to login user (login and password good)
                 var signincredentials = GetSigningCredentials();
                 var claims = await GetClaims(user);
 
@@ -127,22 +128,24 @@ namespace HiddenVilla_Api.Controllers
             }
         }
 
-        private SigningCredentials GetSigningCredentials()
+        //After successful login we generate a token that uses the secure key. We need to get all claims and add that to the token.
+        private SigningCredentials GetSigningCredentials() //built in class in microsoft.identity.model.tokens
         {
             var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_apiSettings.SecretKey));
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
+        //sets the claims we need
         private async Task<List<Claim>> GetClaims(ApplicationUser user)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Email),
+                new Claim(ClaimTypes.Name, user.Email), //default type and value
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim("Id", user.Id),
+                new Claim("Id", user.Id), //custom type and value
             };
             var roles = await _userManager.GetRolesAsync(await _userManager.FindByEmailAsync(user.Email));
-            foreach(var role in roles)
+            foreach(var role in roles) //user can have more than one role
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }

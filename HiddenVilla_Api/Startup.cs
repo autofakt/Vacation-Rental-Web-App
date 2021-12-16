@@ -43,6 +43,8 @@ namespace HiddenVilla_Api
             //added identity
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
+            //used for helper class APISettings. Automatically populates the class with values for that field in appSettings. Then is
+            //injected into accountController
             var appSettingsSection = Configuration.GetSection("APISettings");
             services.Configure<APISettings>(appSettingsSection);
 

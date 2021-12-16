@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Models
 {
+    //When signing in this is sent to request as the body
     public class AuthenticationDTO
     {
         [Required(ErrorMessage = "UserName is required")]
