@@ -20,7 +20,7 @@ namespace HiddenVilla_Api.Controllers
     //action for sign-in/sign-out
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
+    [Authorize] //only authorized users can access action methods
     public class AccountController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -40,14 +40,14 @@ namespace HiddenVilla_Api.Controllers
         }
        
         [HttpPost]
-        [AllowAnonymous]
+        [AllowAnonymous] //takes precedence over authorize tag.
         public async Task<IActionResult> SignUp([FromBody] UserRequestDTO userRequestDTO)
         {
             if(userRequestDTO == null || !ModelState.IsValid)
             {
                 return BadRequest();
             }
-            var user = new ApplicationUser
+            var user = new ApplicationUser  //same as identity user but added a name field.
             {
                 UserName = userRequestDTO.Email,
                 Email = userRequestDTO.Email,
@@ -56,6 +56,7 @@ namespace HiddenVilla_Api.Controllers
                 EmailConfirmed = true
             };
 
+            //userManager has a helper method called createAsync.
             var result = await _userManager.CreateAsync(user, userRequestDTO.Password);
 
             if (!result.Succeeded)
@@ -63,6 +64,8 @@ namespace HiddenVilla_Api.Controllers
                 var errors = result.Errors.Select(e => e.Description);
                 return BadRequest(new RegistrationResponseDTO { Errors = errors, IsRegistrationSuccessful = false });
             }
+
+            //assigning customer role to our new user.
             var roleResult = await _userManager.AddToRoleAsync(user, SD.Role_Customer);
             if (!roleResult.Succeeded)
             {

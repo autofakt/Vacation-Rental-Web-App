@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 //input
 namespace Models
 {
+    //Class to hold all values for user when they are registering.
     public class UserRequestDTO
     {
         [Required(ErrorMessage = "Name is required")]
@@ -24,7 +25,7 @@ namespace Models
         public string Password { get; set; }
         [Required(ErrorMessage = "Confirm password is required")]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Password and confirm password is not matched")]
+        [Compare("Password", ErrorMessage = "Password and confirm password is not matched")] //compare data annotation compares the passwords
 
         public string ConfirmPassword { get; set; }
     }

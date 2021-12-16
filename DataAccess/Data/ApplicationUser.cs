@@ -9,6 +9,7 @@ namespace DataAccess.Data
 {
     public class ApplicationUser: IdentityUser
     {
+        //Made our own user because the regular identity user has no property for name.
         public string Name { get; set; }
     }
 }

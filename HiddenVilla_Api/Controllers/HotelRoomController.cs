@@ -15,7 +15,9 @@ namespace HiddenVilla_Api.Controllers
     [Route("api/[controller]")]
     public class HotelRoomController : Controller
     {
+       
         private readonly IHotelRoomRepository _hotelRoomRepository;
+        //using dependency injection to get access to hotelRoomRepo
         public HotelRoomController(IHotelRoomRepository hotelRoomRepository)
         {
             _hotelRoomRepository = hotelRoomRepository;
@@ -65,6 +67,7 @@ namespace HiddenVilla_Api.Controllers
         {
             if(roomId == null)
             {
+                //made an errormodel class for error message.
                 return BadRequest(new ErrorModel()
                 {
                     Title = "No such Id",
