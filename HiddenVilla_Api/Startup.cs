@@ -55,7 +55,7 @@ namespace HiddenVilla_Api
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; //constant = "Bearer"
             }).AddJwtBearer(x=> {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
