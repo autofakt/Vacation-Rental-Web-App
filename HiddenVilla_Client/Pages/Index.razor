@@ -124,8 +124,8 @@
         try
         {
             HomeModel.EndDate = HomeModel.StartDate.AddDays(HomeModel.NoOfNights);
-            await localStorage.SetItemAsync(SD.Local_InitialBoking, HomeModel);
-            navigationManager.NavigateTo("hotel/rooms", true);
+            await localStorage.SetItemAsync(SD.Local_InitialBoking, HomeModel);  //adds the homeModel info from homepage into local storage on save
+            navigationManager.NavigateTo("hotel/rooms", true); //set force load to true, reloads the page every visit.
 
 
         }

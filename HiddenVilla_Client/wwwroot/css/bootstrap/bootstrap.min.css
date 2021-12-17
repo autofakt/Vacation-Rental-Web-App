@@ -5,6 +5,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 
+/*Added bootwatch to change the original bootstrap layout*/
 :root {
     --blue: #007bff;
     --indigo: #6610f2;

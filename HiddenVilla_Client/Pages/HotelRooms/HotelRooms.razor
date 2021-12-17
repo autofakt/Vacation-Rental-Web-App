@@ -168,7 +168,7 @@ else
     {
         try
         {
-            if (await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking) != null)
+            if (await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking) != null)  //grabs homeVM from local storage (start date, end date, and noNights)
             {
                 HomeModel = await localStorage.GetItemAsync<HomeVM>(SD.Local_InitialBoking);
                 // Console.WriteLine($"Start: {HomeModel.StartDate} , End: {HomeModel.EndDate} , NoNights: {HomeModel.NoOfNights} ");

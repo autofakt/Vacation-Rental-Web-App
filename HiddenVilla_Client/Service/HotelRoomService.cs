@@ -11,7 +11,7 @@ namespace HiddenVilla_Client.Service
 {
     public class HotelRoomService : IHotelRoomService
     {
-        private readonly HttpClient _client;
+        private readonly HttpClient _client; //registered in program.cs
 
         public HotelRoomService(HttpClient client)
         {
