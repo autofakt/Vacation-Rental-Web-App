@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
 namespace HiddenVilla_Client.Helper
-{
+{   //These are the toastr notifications (green and red) little messages if everything is successful or not.
     public static class IJSRuntimeExtension
     {
         public static async ValueTask ToastrSuccess(this IJSRuntime JSRuntime, string message)

@@ -8,11 +8,12 @@
 </p>
 
 <p>
-    The application also consists of a client-side WASM (web assembly) that makes requests to our API. The API is a ASP.NET Core Web API.
+    The application also consists of a Blazor client-side WASM (web assembly) that makes requests to our API. The API is a ASP.NET Core Web API.
 </p>
 
 <p>
    The server-side admin tool is using default ASP.NET Identity Razor Class Library. This was scaffolded into the HiddenVilla_Server project
-    and then the application DB context was updated to inheret from identityDbContext.
+    and then the application DB context was updated to inheret from identityDbContext. We also made a new class of ApplicationUser that I added
+    a name field to which inhertits from IdentityUser.
 </p>
   

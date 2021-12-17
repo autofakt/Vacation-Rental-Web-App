@@ -77,12 +77,16 @@ namespace HiddenVilla_Api
             services.AddScoped<IRoomOrderDetailsRepository, RoomOrderDetailsRepository>();
             services.AddScoped<IHotelImageRepository, HotelImagesRepository>();
 
+            //since our we will be accessing the API from our WASM client that will have its own URL so we will need CORS.
+            //Cross origin request.
             services.AddCors(o => o.AddPolicy("HiddenVilla", builder =>
             {
                 builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
             }));
 
             services.AddRouting(option => option.LowercaseUrls = true);
+
+            //NewtonSoft is used for converting between .NET types and JSON types.
             services.AddControllers().AddJsonOptions(opt=>opt.JsonSerializerOptions.PropertyNamingPolicy = null)
                 .AddNewtonsoftJson(opt=>
                 {
@@ -102,7 +106,7 @@ namespace HiddenVilla_Api
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
                 });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {  //Adding bearer token in swagger
                    {
                      new OpenApiSecurityScheme
                      {
